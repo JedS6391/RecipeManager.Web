@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RecipeApiService } from '../api/recipe-api.service';
 import { Recipe } from '../api/models/read/recipe.interface';
+import { RecipesFacade } from '../store/recipes-store.facade';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-list',
@@ -8,11 +9,15 @@ import { Recipe } from '../api/models/read/recipe.interface';
   styleUrls: ['./recipe-list.component.scss']
 })
 export class RecipeListComponent implements OnInit {
-    public recipes: Recipe[];
+    public isLoading$: Observable<boolean>;
+    public recipes$: Observable<Recipe[]>;
 
-    constructor(public recipeApiService: RecipeApiService) { }
+    constructor(public recipesFacade: RecipesFacade) { }
 
     ngOnInit(): void {
-        this.recipeApiService.getRecipes().subscribe(recipes => this.recipes = recipes);
+        this.recipesFacade.fetchAllRecipes();
+
+        this.isLoading$ = this.recipesFacade.isRecipeListLoading();
+        this.recipes$ = this.recipesFacade.getAllRecipes();
     }
 }

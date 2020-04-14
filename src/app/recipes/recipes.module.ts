@@ -8,6 +8,8 @@ import { RouterModule } from '@angular/router';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { ProfileModule } from '../profile/profile.module';
 import { RecipeIngredientsComponent } from './recipe-edit/recipe-ingredients/recipe-ingredients.component';
+import { RecipesStoreModule } from './store/recipes-store.module';
+import { SpinnerModule } from '../shared/spinner/spinner.module';
 
 
 
@@ -17,8 +19,10 @@ import { RecipeIngredientsComponent } from './recipe-edit/recipe-ingredients/rec
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
+    SpinnerModule,
     ProfileModule,
-    RecipeApiModule
+    RecipeApiModule,
+    RecipesStoreModule
   ]
 })
 export class RecipesModule { }

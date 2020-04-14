@@ -14,7 +14,11 @@
     <div class="card">  
       <form [formGroup]="form" (ngSubmit)=submitForm()>
         <div class="row">
-            <div class="11 col"></div>
+            <div class="11 col">
+              <div *ngIf="saveSuccessful" class="card success">
+                Successfully saved recipe.
+              </div>
+            </div>
             <div class="1 col"><button class="btn primary">Save</button></div>
         </div>
         <div class="row">

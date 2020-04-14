@@ -20,7 +20,10 @@
     "@angular/platform-browser-dynamic": "~8.2.11",
     "@angular/router": "~8.2.11",
     "@auth0/auth0-spa-js": "^1.6.5",
+    "@ngrx/effects": "^9.1.0",
+    "@ngrx/store": "^9.1.0",
     "ngrx": "0.0.1-security",
+    "ngrx-store-logger": "^0.2.4",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"

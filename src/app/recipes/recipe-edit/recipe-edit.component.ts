@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { RecipeApiService } from '../api/recipe-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe } from '../api/models/read/recipe.interface';
-import { Observable, forkJoin, from } from 'rxjs';
+import { Observable, forkJoin, from, timer } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -13,6 +13,7 @@ import { Observable, forkJoin, from } from 'rxjs';
 export class RecipeEditComponent implements OnInit {
   public form: FormGroup;
   public recipe$: Observable<Recipe>;
+  public saveSuccessful = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -75,6 +76,9 @@ export class RecipeEditComponent implements OnInit {
 
     forkJoin([updateRecipe$, updateRecipeIngredients$]).subscribe(recipes => {
       this.recipe$ = from(recipes);
+      this.saveSuccessful = true;
+
+      timer(2000).subscribe(() => this.saveSuccessful = false);
     });
   }
 }

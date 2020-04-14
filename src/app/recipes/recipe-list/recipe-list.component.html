@@ -8,7 +8,9 @@
     </div>
   </div>
 
-  <div class="card">
+  <app-spinner *ngIf="isLoading$ | async"></app-spinner>
+
+  <div *ngIf="!(isLoading$ | async)" class="card">
     <div class="row">
         <div class="11 col"></div>
         <div class="1 col">
@@ -24,7 +26,7 @@
           </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let recipe of recipes">
+        <tr *ngFor="let recipe of recipes$ | async">
           <td class="11 col">{{ recipe.name }}</td>
           <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn" >Edit</a></td>
         </tr>
