@@ -1,0 +1,34 @@
+<div class="c">
+    <div class="row">
+        <div class="1 col">
+          <a [routerLink]="['../']"><i class="fas fa-chevron-left"></i></a>
+        </div>
+        <div class="8 col">
+          <h3>New recipe</h3>
+        </div>
+        <div class="3 col">
+          <app-profile></app-profile>
+        </div>
+      </div>
+  
+    <div class="card">  
+      <form [formGroup]="form" (ngSubmit)=submitForm()>
+        <div class="row">
+            <div class="11 col"></div>
+            <div class="1 col"><button class="btn primary">Save</button></div>
+        </div>
+        <div class="row">
+            <div class="12 col">
+                Name
+                <input class="card w-100" id="name" formControlName="name" type="text" placeholder="Name">
+            </div>
+        </div>
+        <div class="row">
+            <div class="12 col">
+                <small><b>Once you've given the recipe a name, you will be able to add ingredients and instructions.</b></small>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  

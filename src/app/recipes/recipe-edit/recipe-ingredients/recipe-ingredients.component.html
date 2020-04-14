@@ -1,0 +1,31 @@
+<div class="card" [formGroup]="form">  
+    <p>Ingredients</p>
+    <table class="w-100" formArrayName="ingredients">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let ingredient of form.get('ingredients').controls; let i = index;" [formGroupName]="i">
+                <td class="10 col">
+                    <input class="card" id="ingredient-name" formControlName="name" type="text">
+                </td>
+                <td class="1 col">
+                    <input class="card" id="ingredient-amount" formControlName="amount" type="text">
+                </td>
+                <td class="1 col">
+                    <a (click)="deleteIngredient(i)" class="btn">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="1 col">
+            <a (click)="addIngredient()" class="btn primary">Add</a>
+        </div>
+        <div class="11 col"></div>
+    </div>
+</div>

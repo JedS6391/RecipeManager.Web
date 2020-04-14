@@ -1,0 +1,3 @@
+<small *ngIf="authenticationService.userProfile$ | async as profile">
+    <b>{{ profile.name }} | {{ profile.email }}</b>
+</small>

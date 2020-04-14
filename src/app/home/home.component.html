@@ -1,0 +1,23 @@
+<div class="c">
+    <div class="row">
+        <div class="11 col">
+            <h3>Welcome!</h3>
+        </div>
+        <div class="1 col"></div>
+    </div>
+
+    <div class="card">
+        <div *ngIf="!authenticationService.loggedIn" class="row">            
+            <p>Please log in to view and manage the recipes for your account.</p>
+
+            <button (click)="authenticationService.login('recipes')" class="btn primary">Log In</button>
+        </div>
+
+        <div *ngIf="authenticationService.loggedIn" class="row">
+            <p>Click below to view your recipes.</p>
+
+            <a [routerLink]="['../recipes']" class="btn primary">View recipes</a>
+        </div>
+    </div>
+</div>
+
