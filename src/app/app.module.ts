@@ -34,7 +34,6 @@ const metaReducers = !environment.production ? [logger] : [];
     AppRoutingModule,
     AppConfigurationModule,
     AuthenticationModule,
-    SpinnerModule,
     HomeModule,
     ProfileModule,
     RecipesModule

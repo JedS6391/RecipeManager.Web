@@ -1,3 +1,19 @@
-<small *ngIf="authenticationService.userProfile$ | async as profile">
-    <b>{{ profile.name }} | {{ profile.email }}</b>
-</small>
+<div class="row">
+    <div *ngIf="includeBackButton" class="1 col">
+        <a [routerLink]="backButtonCommands"><i class="fas fa-chevron-left"></i></a>
+    </div>
+    <div class="7 col">
+        <h3>{{ title }}</h3>
+    </div>
+    <div class="4 col">
+        <div>
+            <small *ngIf="authenticationService.userProfile$ | async as profile">
+                <b>{{ profile.name }} | {{ profile.email }} | </b>
+            </small>
+            <small>
+                <a (click)="logout()">Logout</a>
+            </small>
+        </div>
+    </div>
+</div>
+

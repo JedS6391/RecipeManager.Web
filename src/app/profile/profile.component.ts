@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AuthenticationService } from '../authentication/authentication.service';
 
 @Component({
@@ -6,11 +6,19 @@ import { AuthenticationService } from '../authentication/authentication.service'
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
+  @Input()
+  public title: string;
+
+  @Input()
+  public includeBackButton: boolean;
+
+  @Input()
+  public backButtonCommands: string[];
 
   constructor(public authenticationService: AuthenticationService) { }
 
-  ngOnInit() {
+  public logout(): void {
+    this.authenticationService.logout();
   }
-
 }

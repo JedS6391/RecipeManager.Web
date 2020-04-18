@@ -9,9 +9,13 @@ export interface RecipeState {
     };
     create: {
         isLoading: boolean;
+        isSaving: boolean;
+        recipe: Recipe;
     };
     edit: {
         isLoading: boolean;
+        isSaving: boolean;
+        saveSuccessful: boolean;
         recipe: Recipe;
     };
 }

@@ -1,21 +1,16 @@
 <div class="c">
-    <div class="row">
-        <div class="1 col">
-          <a [routerLink]="['../../']"><i class="fas fa-chevron-left"></i></a>
-        </div>
-        <div class="8 col">          
-          <h3>Edit recipe</h3>
-        </div>
-        <div class="3 col">
-          <app-profile></app-profile>
-        </div>
-      </div>
+    <app-profile
+      [title]="'Edit recipe'"
+      [includeBackButton]="true"
+      [backButtonCommands]="['../../']">
+    </app-profile>
   
     <div class="card">  
+      <app-spinner *ngIf="isSaving$ | async"></app-spinner>
       <form [formGroup]="form" (ngSubmit)=submitForm()>
         <div class="row">
             <div class="11 col">
-              <div *ngIf="saveSuccessful" class="card success">
+              <div *ngIf="showSaveSuccessfulMessage" class="card success">
                 Successfully saved recipe.
               </div>
             </div>

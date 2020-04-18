@@ -3,6 +3,7 @@ import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { AuthenticationGuard } from '../authentication/authentication.guard';
 import { RecipeCreateComponent } from './recipe-create/recipe-create.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
+import { RecipeViewComponent } from './recipe-view/recipe-view.component';
 
 export const RECIPES_PATH = 'recipes';
 
@@ -20,6 +21,11 @@ const RECIPES_ROUTES: Routes = [
     {
         path: 'edit/:id',
         component: RecipeEditComponent,
+        canActivate: [AuthenticationGuard]
+    },
+    {
+        path: ':id',
+        component: RecipeViewComponent,
         canActivate: [AuthenticationGuard]
     }
 ];

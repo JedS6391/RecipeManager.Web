@@ -1,0 +1,43 @@
+<div class="c">
+    <app-profile
+      [title]="(recipe$ | async).name"
+      [includeBackButton]="true"
+      [backButtonCommands]="['../']">
+    </app-profile>
+  
+    <div class="card">      
+        <div class="row">
+            <div class="11 col"></div>
+            <div class="1 col">
+                <a [routerLink]="['../edit/', recipeId]" class="btn primary">Edit</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="6 col">
+            </div>
+            <div class="6 col">
+            </div>
+        </div>
+        <div class="row card">
+            <table class="w-100">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ingredient of (recipe$ | async).ingredients">
+                        <td class="10 col">
+                            {{ ingredient.name }}
+                        </td>
+                        <td class="1 col">
+                            {{ ingredient.amount }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+  

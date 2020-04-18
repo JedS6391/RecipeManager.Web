@@ -55,7 +55,7 @@ export class AuthenticationService implements OnDestroy {
         );
     }
 
-    login(redirectPath: string = '/') {
+    public login(redirectPath: string = '/') {
         // A desired redirect path can be passed to login method
         // (e.g., from a route guard)
         // Ensure Auth0 client instance exists
@@ -67,6 +67,17 @@ export class AuthenticationService implements OnDestroy {
             });
         });
       }
+
+    public logout() {
+        // Ensure Auth0 client instance exists
+        this.auth0Client$.subscribe((client: Auth0Client) => {
+        // Call method to log out
+        client.logout({
+          client_id: this.appConfiguration.authentication.auth0ClientId,
+          returnTo: `${window.location.origin}`
+        });
+      });
+    }
 
     private configureAuthentication() {
         // This should only be called on app initialization

@@ -3,12 +3,17 @@ import { RecipeState, RECIPES_STATE_STORE_KEY } from './recipes-state';
 
 const getRecipesState = createFeatureSelector<RecipeState>(RECIPES_STATE_STORE_KEY);
 
-export const isRecipeListLoading = createSelector(
+export const recipeListState = createSelector(
     getRecipesState,
-    state => state.list.isLoading
+    state => state.list
 );
 
-export const getAllRecipes = createSelector(
+export const recipeCreateState = createSelector(
     getRecipesState,
-    state => state.list.recipes
+    state => state.create
+);
+
+export const recipeEditState = createSelector(
+    getRecipesState,
+    state => state.edit
 );

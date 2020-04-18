@@ -1,0 +1,40 @@
+.cart-toggle {
+    position: fixed;
+    z-index: 1;
+    top: 50%;
+    right: 0;
+}
+
+.cart-toggle > a {
+    color: black;
+}
+
+.cart {
+    height: 1000px;
+    width: 0px;
+    position: fixed; 
+    z-index: 1; 
+    top: 0;
+    right: 0;
+    background-color: black; 
+    color: white;
+    overflow-x: hidden; 
+    transition: 0.5s; 
+    margin-top: -0.5em;
+}
+
+.cart-visible {
+    width: 250px;
+}
+
+.cart-closebutton {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.cart-content {
+    margin: 0.5em;
+}

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
-import { RecipeApiService } from '../api/recipe-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { Recipe } from '../api/models/read/recipe.interface';
 import { Observable, forkJoin, from, timer } from 'rxjs';
+
+import { Recipe } from '../api/models/read/recipe.interface';
+import { RecipesEditFacade } from '../store/recipes-store.facade';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -12,13 +14,16 @@ import { Observable, forkJoin, from, timer } from 'rxjs';
 })
 export class RecipeEditComponent implements OnInit {
   public form: FormGroup;
+  public showSaveSuccessfulMessage = false;
+
+  public isSaving$: Observable<boolean>;
+  public saveSuccessful$: Observable<boolean>;
   public recipe$: Observable<Recipe>;
-  public saveSuccessful = false;
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private recipeApiService: RecipeApiService
+    private recipesEditFacade: RecipesEditFacade
   ) { }
 
   ngOnInit() {
@@ -33,10 +38,16 @@ export class RecipeEditComponent implements OnInit {
       ])
     });
 
+    // Load the recipe being viewed
     this.route.params.subscribe(params => {
-      this.recipe$ = this.recipeApiService.getRecipe(params.id);
+      this.recipesEditFacade.fetchRecipe(params.id);
     });
 
+    this.recipe$ = this.recipesEditFacade.getRecipe();
+    this.isSaving$ = this.recipesEditFacade.isSaving();
+    this.saveSuccessful$ = this.recipesEditFacade.isSaveSuccessful();
+
+    // Update form each time the recipe changes
     this.recipe$.subscribe(recipe => {
       this.form.patchValue({
         name: recipe.name,
@@ -50,35 +61,29 @@ export class RecipeEditComponent implements OnInit {
         })
       )));
     });
+
+    // Show save successful dialog for 2 seconds after each successful save
+    this.saveSuccessful$.pipe(
+      filter(val => val)
+    ).subscribe(() => {
+      this.showSaveSuccessfulMessage = true;
+      timer(2000).subscribe(() => this.showSaveSuccessfulMessage = false);
+    });
   }
 
   public submitForm(): void {
-    console.log(this.form.value);
-
-    // Update recipe
-    const updateRecipe$ = this.recipeApiService.updateRecipe({
+    const updatedRecipe = {
       recipeId: this.form.value.recipeId,
       name: this.form.value.name
+    };
+
+    const updatedIngredients = (this.form.get('ingredients') as FormArray).value.map(ingredient => {
+      return {
+        name: ingredient.name,
+        amount: ingredient.amount
+      };
     });
 
-    // Update ingredients
-    const ingredients = this.form.get('ingredients') as FormArray;
-
-    const updateRecipeIngredients$ = this.recipeApiService.updateRecipeIngredients(
-      this.form.value.recipeId,
-      ingredients.value.map(ingredient => {
-        return {
-          name: ingredient.name,
-          amount: ingredient.amount
-        };
-      })
-    );
-
-    forkJoin([updateRecipe$, updateRecipeIngredients$]).subscribe(recipes => {
-      this.recipe$ = from(recipes);
-      this.saveSuccessful = true;
-
-      timer(2000).subscribe(() => this.saveSuccessful = false);
-    });
+    this.recipesEditFacade.updateRecipe(updatedRecipe, updatedIngredients);
   }
 }
