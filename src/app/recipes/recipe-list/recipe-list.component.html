@@ -7,7 +7,7 @@
     <div class="row">
         <div class="11 col"></div>
         <div class="1 col">
-          <a [routerLink]="['new']" class="btn primary">New</a>
+          <a [routerLink]="['new']" class="btn primary new-button"><i class="fas fa-plus"></i></a>
         </div>
     </div>
 
@@ -15,13 +15,15 @@
       <thead>
           <tr>
               <th>Name</th>
-              <th></th>
+              <th></th>    
+              <th></th>          
           </tr>
       </thead>
       <tbody>
         <tr *ngFor="let recipe of recipes$ | async">
-          <td class="11 col"><a [routerLink]="[recipe.id]">{{ recipe.name }}</a></td>
-          <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn" >Edit</a></td>
+          <td class="10 col"><a [routerLink]="[recipe.id]">{{ recipe.name }}</a></td>
+          <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn"><i class="fas fa-pencil-alt"></i></a></td>
+          <td class="1 col"><a (click)="addRecipeToCart(recipe)" class="btn" ><i class="fas fa-cart-plus"></i></a></td>
         </tr>
       </tbody>
     </table>

@@ -9,6 +9,7 @@ export interface Ingredient {
     id: string;
     name: string;
     amount: string;
+    recipeId: string;
 }
 
 export interface Instruction {

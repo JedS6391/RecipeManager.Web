@@ -8,76 +8,62 @@ import { publishLast, refCount, takeUntil } from 'rxjs/operators';
 import { CreateRecipe } from './models/write/create-recipe.interface';
 import { CreateIngredient } from './models/write/create-ingredient.interface';
 import { UpdateRecipe } from './models/write/update-recipe.interface';
+import { BaseApiService } from '../../shared/base-api.service';
 
 export const RECIPES_BASE_URL_TOKEN = new InjectionToken<string>('RecipeApiBaseUrl');
 
 @Injectable()
-export class RecipeApiService implements OnDestroy {
-    private token: string;
-    private destroyed$ = new Subject();
-
+export class RecipeApiService extends BaseApiService {
     constructor(
-        @Inject(RECIPES_BASE_URL_TOKEN) private baseUrl: string,
-        private http: HttpClient,
-        private authenticationService: AuthenticationService
+        @Inject(RECIPES_BASE_URL_TOKEN) baseUrl: string,
+        http: HttpClient,
+        authenticationService: AuthenticationService
     ) {
-        this.authenticationService.token$
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(token => this.token = token);
-    }
-
-    ngOnDestroy(): void {
-        this.destroyed$.next();
+        super(baseUrl, http, authenticationService);
     }
 
     public getRecipes(): Observable<Recipe[]> {
-        const url = `${this.baseUrl}${RECIPE_URLS.recipes}`;
+        const url = `${this.baseUrl}${RECIPE_URLS.getAllRecipes}`;
 
-        return this.http.get<Recipe[]>(url, { headers: this.buildHeaders() }).pipe(
+        return this.http.get<Recipe[]>(url, { headers: this.getHeaders() }).pipe(
             publishLast(),
             refCount()
         );
     }
 
     public getRecipe(recipeId: string): Observable<Recipe> {
-        const url = `${this.baseUrl}${RECIPE_URLS.recipes}/${recipeId}`;
+        const url = `${this.baseUrl}${RECIPE_URLS.getRecipeById(recipeId)}`;
 
-        return this.http.get<Recipe>(url, { headers: this.buildHeaders() }).pipe(
+        return this.http.get<Recipe>(url, { headers: this.getHeaders() }).pipe(
             publishLast(),
             refCount()
         );
     }
 
     public createRecipe(recipe: CreateRecipe): Observable<Recipe> {
-        const url = `${this.baseUrl}${RECIPE_URLS.recipes}`;
+        const url = `${this.baseUrl}${RECIPE_URLS.createRecipe}`;
 
-        return this.http.post<CreateRecipe>(url, recipe, {headers: this.buildHeaders()}).pipe(
+        return this.http.post<CreateRecipe>(url, recipe, {headers: this.getHeaders()}).pipe(
             publishLast(),
             refCount()
         );
     }
 
     public updateRecipe(recipe: UpdateRecipe): Observable<Recipe> {
-        const url = `${this.baseUrl}${RECIPE_URLS.recipes}/${recipe.recipeId}`;
+        const url = `${this.baseUrl}${RECIPE_URLS.updateRecipe(recipe.recipeId)}`;
 
-        return this.http.put<UpdateRecipe>(url, recipe, {headers: this.buildHeaders()}).pipe(
+        return this.http.put<UpdateRecipe>(url, recipe, {headers: this.getHeaders()}).pipe(
             publishLast(),
             refCount()
         );
     }
 
     public updateRecipeIngredients(recipeId: string, ingredients: CreateIngredient[]): Observable<Recipe> {
-        const url = `${this.baseUrl}${RECIPE_URLS.recipes}/${recipeId}/ingredients`;
+        const url = `${this.baseUrl}${RECIPE_URLS.updateRecipeIngredients(recipeId)}`;
 
-        return this.http.put<CreateIngredient[]>(url, ingredients, {headers: this.buildHeaders()}).pipe(
+        return this.http.put<CreateIngredient[]>(url, ingredients, {headers: this.getHeaders()}).pipe(
             publishLast(),
             refCount()
         );
-    }
-
-    private buildHeaders(): HttpHeaders {
-        return new HttpHeaders({
-            Authorization: `Bearer ${this.token}`
-        });
     }
 }

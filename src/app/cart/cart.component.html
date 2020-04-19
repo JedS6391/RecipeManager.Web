@@ -1,10 +1,21 @@
 <div class="cart-toggle">
-    <a (click)="toggleCart()" class="btn">View cart</a>
+    <a (click)="toggleCart()" class="btn"><i class="fas fa-shopping-cart"></i></a>
 </div>
 <div class="cart" [ngClass]="{ 'cart-visible': showCart }">
     <a (click)="toggleCart()" class="cart-closebutton">&times;</a>
     <div class="cart-content">
         <h4>Cart</h4>
         <hr>
+        <div>
+            <button (click)="clearCart()" class="btn">Clear cart</button>
+        </div>
+        <div *ngFor="let displayItem of cartDisplayItems$ | async" class="c">
+            <b>{{ displayItem.recipe.name }}</b>
+            <ul>
+                <li *ngFor="let ingredient of displayItem.ingredients">
+                    {{ ingredient.name}} | {{ ingredient.amount }}
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

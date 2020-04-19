@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeApiModule } from './api/recipe-api.module';
 import { RecipeCreateComponent } from './recipe-create/recipe-create.component';
@@ -23,7 +25,8 @@ import { CartModule } from '../cart/cart.module';
     ProfileModule,
     CartModule,
     RecipeApiModule,
-    RecipesStoreModule
+    RecipesStoreModule,
+    MatDialogModule
   ]
 })
 export class RecipesModule { }
