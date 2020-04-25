@@ -29,6 +29,10 @@ export class RecipeIngredientsComponent implements OnInit {
     this.ingredientCategories$ = this.recipesEditFacade.getIngredientCategories();
   }
 
+  public get ingredients(): FormArray {
+    return this.form.get('ingredients') as FormArray;
+  }
+
   public addIngredient(): void {
     const ingredients = this.form.get('ingredients') as FormArray;
 

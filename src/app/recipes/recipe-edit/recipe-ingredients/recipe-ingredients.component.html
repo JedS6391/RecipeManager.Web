@@ -10,7 +10,9 @@
             </tr>
         </thead>
         <tbody formArrayName="ingredients">
-            <tr *ngFor="let ingredient of form.get('ingredients').controls; let ingredientIndex = index;" [formGroupName]="ingredientIndex">
+            <tr 
+                *ngFor="let ingredient of ingredients.controls; let ingredientIndex = index;" 
+                [formGroupName]="ingredientIndex">
                 <td class="7 col">
                     <input class="card" id="ingredient-name" formControlName="name" type="text">
                 </td>

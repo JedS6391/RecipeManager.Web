@@ -70,6 +70,10 @@ export class AddRecipeToCartComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
   }
 
+  public get ingredients(): FormArray {
+    return this.form.get('ingredients') as FormArray;
+  }
+
   public selectAll() {
     const ingredients = this.form.get('ingredients') as FormArray;
 

@@ -7,7 +7,9 @@
 
                 <form [formGroup]="form">
                     <div formArrayName="ingredients">
-                        <div *ngFor="let ingredient of form.get('ingredients').controls; let i = index;" [formGroupName]="i" >                                               
+                        <div 
+                            *ngFor="let ingredient of ingredients.controls; let i = index;" 
+                            [formGroupName]="i">                                               
                             <label><input type="checkbox" formControlName="selected"> {{ ingredient.value.name }}</label>
                         </div> 
                     </div>
