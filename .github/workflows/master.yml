@@ -33,3 +33,7 @@ jobs:
         run: |
           npm i
           npm run build --configuration="production"
+
+      - name: Deploy to Heroku
+        run: |
+          git push heroku master
