@@ -33,10 +33,3 @@ jobs:
         run: |
           npm i
           npm run build --configuration="production"
-
-      - name: Deploy to Heroku
-        env: 
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          heroku login 
-          git push heroku master
