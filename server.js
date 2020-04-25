@@ -1,3 +1,4 @@
+// Used to serve the application via
 const express = require('express');
 const app = express();
 
