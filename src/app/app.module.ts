@@ -18,6 +18,7 @@ import { SpinnerModule } from './shared/spinner/spinner.module';
 import { CartModule } from './cart/cart.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CART_BASE_URL_TOKEN } from './cart/api/cart-api.service';
+import { MessagingService } from './shared/messaging.service';
 
 function logger(reducer: any): any {
   return storeLogger()(reducer);
@@ -51,7 +52,8 @@ const metaReducers = !environment.production ? [logger] : [];
     {
       provide: CART_BASE_URL_TOKEN,
       useValue: environment.baseUrl
-    }
+    },
+    MessagingService
   ],
   bootstrap: [AppComponent]
 })

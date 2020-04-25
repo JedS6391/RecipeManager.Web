@@ -27,7 +27,8 @@ export const RECIPES_INITIAL_STATE: RecipeState = {
             name: '',
             ingredients: [],
             instructions: []
-        }
+        },
+        ingredientCategories: []
     }
 };
 
@@ -37,10 +38,12 @@ const handlerMap: ActionHandlerMap<RecipeState> = {
     [actions.GetAllRecipesSuccess.TYPE]: getAllRecipesSuccessHandler,
     [actions.GetRecipe.TYPE]: getRecipeHandler,
     [actions.GetRecipeSuccess.TYPE]: getRecipeSuccessHandler,
+    [actions.GetIngredientCategories.TYPE]: getIngredientCategoriesHandler,
+    [actions.GetIngredientCategoriesSuccess.TYPE]: getIngredientCategoriesSuccessHandler,
     [actions.CreateRecipeAction.TYPE]: createRecipeHandler,
     [actions.CreateRecipeSuccess.TYPE]: createRecipeSuccessHandler,
     [actions.UpdateRecipeAction.TYPE]: updateRecipeHandler,
-    [actions.UpdateRecipeSuccess.TYPE]: updateRecipeSuccessHandler
+    [actions.UpdateRecipeSuccess.TYPE]: updateRecipeSuccessHandler,
 };
 
 export function recipesReducer(state: RecipeState = RECIPES_INITIAL_STATE, action: Action): RecipeState {
@@ -77,7 +80,8 @@ function getRecipeHandler(state: RecipeState): RecipeState {
             isLoading: true,
             isSaving: false,
             saveSuccessful: false,
-            recipe: state.edit.recipe
+            recipe: state.edit.recipe,
+            ingredientCategories: state.edit.ingredientCategories
         }
     };
 }
@@ -90,7 +94,36 @@ function getRecipeSuccessHandler(state: RecipeState, action: actions.GetRecipeSu
             isLoading: false,
             isSaving: false,
             saveSuccessful: false,
-            recipe: action.recipe
+            recipe: action.recipe,
+            ingredientCategories: state.edit.ingredientCategories
+        }
+    };
+}
+
+function getIngredientCategoriesHandler(state: RecipeState): RecipeState {
+    return {
+        list: state.list,
+        create: state.create,
+        edit: {
+            isLoading: true,
+            isSaving: false,
+            saveSuccessful: false,
+            recipe: state.edit.recipe,
+            ingredientCategories: state.edit.ingredientCategories
+        }
+    };
+}
+
+function getIngredientCategoriesSuccessHandler(state: RecipeState, action: actions.GetIngredientCategoriesSuccess): RecipeState {
+    return {
+        list: state.list,
+        create: state.create,
+        edit: {
+            isLoading: false,
+            isSaving: false,
+            saveSuccessful: false,
+            recipe: state.edit.recipe,
+            ingredientCategories: action.ingredientCategories
         }
     };
 }
@@ -127,7 +160,8 @@ function updateRecipeHandler(state: RecipeState): RecipeState {
             isLoading: false,
             isSaving: true,
             saveSuccessful: false,
-            recipe: state.edit.recipe
+            recipe: state.edit.recipe,
+            ingredientCategories: state.edit.ingredientCategories
         }
     };
 }
@@ -140,7 +174,8 @@ function updateRecipeSuccessHandler(state: RecipeState, action: actions.UpdateRe
             isLoading: false,
             isSaving: false,
             saveSuccessful: true,
-            recipe: action.recipe
+            recipe: action.recipe,
+            ingredientCategories: state.edit.ingredientCategories
         }
     };
 }

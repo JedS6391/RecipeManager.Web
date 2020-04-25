@@ -36,6 +36,17 @@ export class RecipesEffects {
     );
 
     @Effect()
+    public getIngredientCategories$ = this.actions$.pipe(
+        ofType<actions.GetIngredientCategories>(actions.GetIngredientCategories.TYPE),
+        switchMap(() => {
+            return this.recipeApiService.getIngredientCategories().pipe(
+                map(ingredientCategories => new actions.GetIngredientCategoriesSuccess(ingredientCategories)),
+                catchError(error => of(new actions.GetIngredientCategoriesFailure(error)))
+            );
+        })
+    );
+
+    @Effect()
     public createRecipe$ = this.actions$.pipe(
         ofType<actions.CreateRecipeAction>(actions.CreateRecipeAction.TYPE),
         switchMap(action => {

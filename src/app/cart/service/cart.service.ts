@@ -50,12 +50,16 @@ export class CartService {
     }
 
     public getSelectedCartItemsForRecipe(recipeId: string): Observable<CartItem[]> {
+        this.ensureInitialised();
+
         return this.cartItemsByRecipe$.pipe(
             map(cartItemsByRecipe => cartItemsByRecipe.get(recipeId))
         );
     }
 
     public updateCartItemsForRecipe(recipeId: string, cartItemUpdates: CartItemUpdate[]) {
+        this.ensureInitialised();
+
         const existingCartItemUpdates = Array.from(this.cartItemsByRecipe.entries())
             .filter(([recipe, _]) => recipe !== recipeId)
             .map(([recipe, cartItems]) => {
@@ -70,6 +74,8 @@ export class CartService {
     }
 
     public clearCart() {
+        this.ensureInitialised();
+
         this.cartFacade.updateCurrentCartItems([]);
     }
 
@@ -93,5 +99,11 @@ export class CartService {
         return new Map(recipes
             .filter(recipe => cartItemsByRecipe.has(recipe.id))
             .map(recipe => [recipe.id, recipe]));
+    }
+
+    private ensureInitialised(): void {
+        if (!this.isInitialised) {
+            throw Error('Cart has not been initialised before usage.');
+        }
     }
 }

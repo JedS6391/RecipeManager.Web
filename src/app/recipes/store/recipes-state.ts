@@ -1,4 +1,4 @@
-import { Recipe } from '../api/models/read/recipe.interface';
+import { Recipe, IngredientCategory } from '../api/models/read/recipe.interface';
 
 export const RECIPES_STATE_STORE_KEY = 'recipes';
 
@@ -17,5 +17,6 @@ export interface RecipeState {
         isSaving: boolean;
         saveSuccessful: boolean;
         recipe: Recipe;
+        ingredientCategories: IngredientCategory[];
     };
 }

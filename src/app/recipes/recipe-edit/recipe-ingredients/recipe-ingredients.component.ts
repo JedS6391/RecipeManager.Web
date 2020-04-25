@@ -1,12 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Recipe } from '../../api/models/read/recipe.interface';
-import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+
+import { Recipe, IngredientCategory } from '../../api/models/read/recipe.interface';
+import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { RecipesEditFacade } from '../../store/recipes-store.facade';
 
 @Component({
   selector: 'app-recipe-ingredients',
   templateUrl: './recipe-ingredients.component.html',
-  styleUrls: ['./recipe-ingredients.component.scss']
+  styleUrls: ['./recipe-ingredients.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RecipeIngredientsComponent implements OnInit {
   @Input()
@@ -15,17 +18,24 @@ export class RecipeIngredientsComponent implements OnInit {
   @Input()
   public form: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  public ingredientCategories$: Observable<IngredientCategory[]>;
+
+  constructor(
+    private fb: FormBuilder,
+    private recipesEditFacade: RecipesEditFacade
+  ) { }
 
   ngOnInit() {
+    this.ingredientCategories$ = this.recipesEditFacade.getIngredientCategories();
   }
 
   public addIngredient(): void {
     const ingredients = this.form.get('ingredients') as FormArray;
 
     ingredients.push(this.fb.group({
-        name: '',
-        amount: ''
+        name: ['', Validators.required],
+        amount: ['', Validators.required],
+        category: ['', Validators.required]
     }));
   }
 
@@ -33,5 +43,10 @@ export class RecipeIngredientsComponent implements OnInit {
     const ingredients = this.form.get('ingredients') as FormArray;
 
     ingredients.removeAt(ingredientIndex);
+  }
+
+  public addTag(tag: string) {
+    /* https://github.com/ng-select/ng-select/issues/809 */
+    return tag;
   }
 }

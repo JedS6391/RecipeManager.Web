@@ -7,14 +7,10 @@
   
     <div class="card">  
       <app-spinner *ngIf="isSaving$ | async"></app-spinner>
-      <form [formGroup]="form" (ngSubmit)=submitForm()>
+      <form [formGroup]="form" (ngSubmit)=submitForm() *ngIf="!(isSaving$ | async)">
         <div class="row">
-            <div class="11 col">
-              <div *ngIf="showSaveSuccessfulMessage" class="card success">
-                Successfully saved recipe.
-              </div>
-            </div>
-            <div class="1 col"><button class="btn primary">Save</button></div>
+            <div class="11 col"></div>
+            <div class="1 col"><button class="btn primary save-button"><i class="fas fa-save"></i></button></div>
         </div>
         <div class="row">
             <div class="6 col">
