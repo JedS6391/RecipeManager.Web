@@ -1,14 +1,15 @@
-import { Injectable, Inject, OnDestroy, InjectionToken } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthenticationService } from 'src/app/authentication/authentication.service';
+import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { publishLast, refCount } from 'rxjs/operators';
+
 import { Recipe, IngredientCategory } from './models/read/recipe.interface';
-import { Observable, Subject } from 'rxjs';
 import { RECIPE_URLS } from './recipe.urls';
-import { publishLast, refCount, takeUntil } from 'rxjs/operators';
 import { CreateRecipe } from './models/write/create-recipe.interface';
 import { CreateIngredient } from './models/write/create-ingredient.interface';
 import { UpdateRecipe } from './models/write/update-recipe.interface';
 import { BaseApiService } from '../../shared/base-api.service';
+import { TokenStoreService } from 'src/app/authentication/token-store.service';
 
 export const RECIPES_BASE_URL_TOKEN = new InjectionToken<string>('RecipeApiBaseUrl');
 
@@ -17,9 +18,9 @@ export class RecipeApiService extends BaseApiService {
     constructor(
         @Inject(RECIPES_BASE_URL_TOKEN) baseUrl: string,
         http: HttpClient,
-        authenticationService: AuthenticationService
+        tokenStoreService: TokenStoreService
     ) {
-        super(baseUrl, http, authenticationService);
+        super(baseUrl, http, tokenStoreService);
     }
 
     public getRecipes(): Observable<Recipe[]> {

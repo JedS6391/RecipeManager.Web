@@ -6,10 +6,16 @@ import { Observable, from, throwError, of, BehaviorSubject, Subject, combineLate
 import { shareReplay, catchError, concatMap, tap, takeUntil, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
+/**
+ * Provides functionality relating to authentication for the application.
+ *
+ * Primarily based on: https://auth0.com/docs/quickstart/spa/angular2/01-login
+ */
 @Injectable({
     providedIn: 'root'
 })
 export class AuthenticationService implements OnDestroy {
+    // Current implementation uses Auth0, so we just wrap that.
     private auth0Client$: Observable<Auth0Client> = from(createAuth0Client({
         domain: this.appConfiguration.authentication.auth0Domain,
         client_id: this.appConfiguration.authentication.auth0ClientId,
@@ -31,23 +37,35 @@ export class AuthenticationService implements OnDestroy {
         this.handleAuthenticationCallback();
     }
 
-    public loggedIn: boolean;
-
-    public isAuthenticated$ = this.auth0Client$.pipe(
-        concatMap(client => from(client.isAuthenticated())),
-        tap(isAuthenticated => this.loggedIn = isAuthenticated)
+    /**
+     * Indicates whether the current user is authenticated.
+     */
+    public isAuthenticated$: Observable<boolean> = this.auth0Client$.pipe(
+        concatMap(client => from(client.isAuthenticated()))
     );
 
-    public token$ = this.auth0Client$.pipe(
+    /**
+     * The token for the currently authenticated user.
+     */
+    public token$: Observable<string> = this.auth0Client$.pipe(
         concatMap(client => from(client.getTokenSilently()))
     );
 
+    /**
+     * Provides details about the authenticated user.
+     */
     public userProfile$ = this.userProfileSubject$.asObservable();
 
+    /**
+     * Handles the redirect callback for the OAuth process.
+     */
     public handleRedirectCallback$ = this.auth0Client$.pipe(
         concatMap(client => from(client.handleRedirectCallback()))
     );
 
+    /**
+     * Fetches the user details for the currently authenticated user.
+     */
     public getUser$(options?: GetUserOptions): Observable<any> {
         return this.auth0Client$.pipe(
           concatMap(client => from(client.getUser(options))),
@@ -55,6 +73,11 @@ export class AuthenticationService implements OnDestroy {
         );
     }
 
+    /**
+     * Begins the login process.
+     *
+     * @param redirectPath The path to redirect back to after login.
+     */
     public login(redirectPath: string = '/') {
         // A desired redirect path can be passed to login method
         // (e.g., from a route guard)
@@ -68,6 +91,9 @@ export class AuthenticationService implements OnDestroy {
         });
       }
 
+    /**
+     * Begins the logout process.
+     */
     public logout() {
         // Ensure Auth0 client instance exists
         this.auth0Client$.subscribe((client: Auth0Client) => {
