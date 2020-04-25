@@ -10,7 +10,7 @@
             <button [matMenuTriggerFor]="menu" class="btn"><i class="fas fa-list"></i></button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="changeCartItemGroupingMode('recipe')">Group by recipe</button>
-                <button mat-menu-item (click)="changeCartItemGroupingMode('ingredient category')">Group by ingredient category</button>
+                <button mat-menu-item (click)="changeCartItemGroupingMode('ingredientCategory')">Group by ingredient category</button>
             </mat-menu>
             <button *ngIf="(cartDisplayItems$ | async)?.length > 0" (click)="clearCart()" class="btn">Clear</button>
         </div>
@@ -24,7 +24,7 @@
                 </ul>
             </div>
         </div>
-        <div *ngIf="groupingMode == 'ingredient category'">
+        <div *ngIf="groupingMode == 'ingredientCategory'">
             <div *ngFor="let displayItem of cartDisplayItems$ | async" class="c">
                 <b>{{ displayItem.category.name }}</b>
                 <ul>

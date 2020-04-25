@@ -22,7 +22,6 @@ interface RecipeGroupedCartDisplayItem {
   }[];
 }
 
-
 interface IngredientCategoryGroupedCartDisplayItem {
   category: {
     id: string;
@@ -37,7 +36,14 @@ interface IngredientCategoryGroupedCartDisplayItem {
 
 type CartDisplayItem = RecipeGroupedCartDisplayItem | IngredientCategoryGroupedCartDisplayItem;
 
-type CartItemGrouping = 'recipe' | 'ingredient category';
+type CartItemGrouping = 'recipe' | 'ingredientCategory';
+
+interface CartDisplayItemBuilderParameters {
+  cartItemsByRecipe: Map<string, CartItem[]>;
+  cartItemsByIngredientCategory: Map<string, CartItem[]>;
+  recipesLookup: Map<string, Recipe>;
+  ingredientCategoriesLookup: Map<string, IngredientCategory>;
+}
 
 @Component({
   selector: 'app-cart',
@@ -49,6 +55,11 @@ export class CartComponent implements OnInit {
   public groupingMode: CartItemGrouping = 'recipe';
 
   public cartDisplayItems$: Observable<CartDisplayItem[]>;
+
+  private cartDisplayItemBuilders = {
+    recipe: this.buildCartDisplayItemsByRecipe,
+    ingredientCategory: this.buildCartDisplayItemsByIngredientCategory
+  };
 
   constructor(
     private cartService: CartService
@@ -96,52 +107,67 @@ export class CartComponent implements OnInit {
     recipesLookup: Map<string, Recipe>,
     ingredientCategoriesLookup: Map<string, IngredientCategory>
   ): CartDisplayItem[] {
-    if (this.groupingMode === 'recipe') {
-      return Array.from(cartItemsByRecipe, ([recipeId, cartItems]) => {
-        const recipe = recipesLookup.get(recipeId);
+    const parameters = {
+      cartItemsByRecipe,
+      cartItemsByIngredientCategory,
+      recipesLookup,
+      ingredientCategoriesLookup
+    } as CartDisplayItemBuilderParameters;
 
-        if (recipe !== undefined) {
+    return this.cartDisplayItemBuilders[this.groupingMode](parameters);
+  }
+
+  private buildCartDisplayItemsByRecipe(parameters: CartDisplayItemBuilderParameters): CartDisplayItem[] {
+    const cartItemsByRecipe = parameters.cartItemsByRecipe;
+    const recipesLookup = parameters.recipesLookup;
+
+    return Array.from(cartItemsByRecipe, ([recipeId, cartItems]) => {
+      const recipe = recipesLookup.get(recipeId);
+
+      if (recipe !== undefined) {
+        return {
+          recipe: {
+            id: recipe.id,
+            name: recipe.name
+          },
+          ingredients: cartItems.map(cartItem => {
+            return {
+              id: cartItem.ingredient.id,
+              name: cartItem.ingredient.name,
+              amount: cartItem.ingredient.amount,
+              category: {
+                id: cartItem.ingredient.category.id,
+                name: cartItem.ingredient.category.name
+              }
+            };
+          })
+        } as RecipeGroupedCartDisplayItem;
+      }
+    });
+  }
+
+  private buildCartDisplayItemsByIngredientCategory(parameters: CartDisplayItemBuilderParameters): CartDisplayItem[] {
+    const cartItemsByIngredientCategory = parameters.cartItemsByIngredientCategory;
+    const ingredientCategoriesLookup = parameters.ingredientCategoriesLookup;
+
+    return Array.from(cartItemsByIngredientCategory, ([ingredientCategoryId, cartItems]) => {
+      const ingredientCategory = ingredientCategoriesLookup.get(ingredientCategoryId);
+
+      if (ingredientCategory !== undefined) {
           return {
-            recipe: {
-              id: recipe.id,
-              name: recipe.name
+            category: {
+              id: ingredientCategory.id,
+              name: ingredientCategory.name
             },
             ingredients: cartItems.map(cartItem => {
               return {
                 id: cartItem.ingredient.id,
                 name: cartItem.ingredient.name,
-                amount: cartItem.ingredient.amount,
-                category: {
-                  id: cartItem.ingredient.category.id,
-                  name: cartItem.ingredient.category.name
-                }
+                amount: cartItem.ingredient.amount
               };
             })
-          } as RecipeGroupedCartDisplayItem;
-        }
-      });
-    }
-
-    if (this.groupingMode === 'ingredient category') {
-      return Array.from(cartItemsByIngredientCategory, ([ingredientCategoryId, cartItems]) => {
-        const ingredientCategory = ingredientCategoriesLookup.get(ingredientCategoryId);
-
-        if (ingredientCategory !== undefined) {
-            return {
-              category: {
-                id: ingredientCategory.id,
-                name: ingredientCategory.name
-              },
-              ingredients: cartItems.map(cartItem => {
-                return {
-                  id: cartItem.ingredient.id,
-                  name: cartItem.ingredient.name,
-                  amount: cartItem.ingredient.amount
-                };
-              })
-            } as IngredientCategoryGroupedCartDisplayItem;
-        }
-      });
-    }
+          } as IngredientCategoryGroupedCartDisplayItem;
+      }
+    });
   }
 }
