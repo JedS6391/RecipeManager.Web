@@ -10,6 +10,12 @@ export interface Ingredient {
     name: string;
     amount: string;
     recipeId: string;
+    category?: IngredientCategory;
+}
+
+export interface IngredientCategory {
+    id: string;
+    name: string;
 }
 
 export interface Instruction {

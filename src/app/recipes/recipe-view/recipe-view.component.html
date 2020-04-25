@@ -24,15 +24,19 @@
                     <tr>
                         <th>Name</th>
                         <th>Amount</th>
+                        <th>Category</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let ingredient of (recipe$ | async).ingredients">
-                        <td class="10 col">
+                        <td class="8 col">
                             {{ ingredient.name }}
                         </td>
-                        <td class="1 col">
+                        <td class="2 col">
                             {{ ingredient.amount }}
+                        </td>
+                        <td class="2 col">
+                            {{ ingredient.category.name }}
                         </td>
                     </tr>
                 </tbody>

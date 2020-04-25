@@ -1,7 +1,7 @@
 import { Injectable, Inject, OnDestroy, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
-import { Recipe } from './models/read/recipe.interface';
+import { Recipe, IngredientCategory } from './models/read/recipe.interface';
 import { Observable, Subject } from 'rxjs';
 import { RECIPE_URLS } from './recipe.urls';
 import { publishLast, refCount, takeUntil } from 'rxjs/operators';
@@ -35,6 +35,15 @@ export class RecipeApiService extends BaseApiService {
         const url = `${this.baseUrl}${RECIPE_URLS.getRecipeById(recipeId)}`;
 
         return this.http.get<Recipe>(url, { headers: this.getHeaders() }).pipe(
+            publishLast(),
+            refCount()
+        );
+    }
+
+    public getIngredientCategories(): Observable<IngredientCategory[]> {
+        const url = `${this.baseUrl}${RECIPE_URLS.getIngredientCategories}`;
+
+        return this.http.get<IngredientCategory[]>(url, { headers: this.getHeaders() }).pipe(
             publishLast(),
             refCount()
         );

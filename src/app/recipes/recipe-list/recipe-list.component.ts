@@ -5,15 +5,13 @@ import { filter } from 'rxjs/operators';
 
 import { Recipe } from '../api/models/read/recipe.interface';
 import { RecipesListFacade } from '../store/recipes-store.facade';
-import { CartFacade } from 'src/app/cart/store/cart-store.facade';
 import {
   AddRecipeToCartComponent,
   AddRecipeToCartComponentData,
   AddRecipeToCartComponentResult
 } from '../../cart/add-recipe-to-cart/add-recipe-to-cart.component';
 import { CartService } from 'src/app/cart/service/cart.service';
-import { CartItem } from 'src/app/cart/api/models/read/cart.interface';
-import { CartItemUpdate } from 'src/app/cart/api/models/write/update-cart-items';
+import { MessagingService } from 'src/app/shared/messaging.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -27,7 +25,8 @@ export class RecipeListComponent implements OnInit {
     constructor(
       private recipesListFacade: RecipesListFacade,
       private dialog: MatDialog,
-      private cartService: CartService
+      private cartService: CartService,
+      private messagingService: MessagingService
     ) { }
 
     ngOnInit(): void {
@@ -57,6 +56,10 @@ export class RecipeListComponent implements OnInit {
             ingredientId: ingredient.id
           }))
         );
+
+        this.messagingService.showMessage(`${result.recipeName} added to cart!`, {
+          duration: 2000
+        });
       });
     }
 }

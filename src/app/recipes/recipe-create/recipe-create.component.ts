@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RecipesCreateFacade } from '../store/recipes-store.facade';
 import { take, filter, withLatestFrom } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { MessagingService } from 'src/app/shared/messaging.service';
 
 @Component({
   selector: 'app-recipe-create',
@@ -18,18 +19,28 @@ export class RecipeCreateComponent implements OnInit {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private recipesCreateFacade: RecipesCreateFacade
+    private recipesCreateFacade: RecipesCreateFacade,
+    private messagingService: MessagingService
   ) { }
 
   ngOnInit() {
     this.form = this.fb.group({
-      name: ''
+      name: ['', Validators.required]
     });
 
     this.isSaving$ = this.recipesCreateFacade.isSaving();
   }
 
   public submitForm(): void {
+    if (!this.form.valid) {
+      this.messagingService.showMessage('Please enter the required details.', {
+        duration: 2000
+      });
+
+      return;
+    }
+
+
     this.recipesCreateFacade.createRecipe({
         name: this.form.value.name
     });

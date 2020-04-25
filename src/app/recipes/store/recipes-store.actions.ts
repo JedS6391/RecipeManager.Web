@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Recipe } from '../api/models/read/recipe.interface';
+import { Recipe, IngredientCategory } from '../api/models/read/recipe.interface';
 import { CreateIngredient } from '../api/models/write/create-ingredient.interface';
 import { UpdateRecipe } from '../api/models/write/update-recipe.interface';
 import { CreateRecipe } from '../api/models/write/create-recipe.interface';
@@ -42,6 +42,27 @@ export class GetRecipeSuccess implements Action {
 export class GetRecipeFailure implements Action {
     public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET RECIPE FAILURE`;
     public readonly type = GetRecipeFailure.TYPE;
+
+    constructor(public error: Error) {}
+}
+
+export class GetIngredientCategories implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET INGREDIENT CATEGORIES`;
+    public readonly type = GetIngredientCategories.TYPE;
+
+    constructor() {}
+}
+
+export class GetIngredientCategoriesSuccess implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET INGREDIENT CATEGORIES SUCCESS`;
+    public readonly type = GetIngredientCategoriesSuccess.TYPE;
+
+    constructor(public ingredientCategories: IngredientCategory[]) {}
+}
+
+export class GetIngredientCategoriesFailure implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET INGREDIENT CATEGORIES FAILURE`;
+    public readonly type = GetIngredientCategoriesFailure.TYPE;
 
     constructor(public error: Error) {}
 }

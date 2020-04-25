@@ -4,7 +4,7 @@ import { Store, select } from '@ngrx/store';
 import * as selectors from './recipes-store.selectors';
 import * as actions from './recipes-store.actions';
 import { Observable } from 'rxjs';
-import { Recipe } from '../api/models/read/recipe.interface';
+import { Recipe, IngredientCategory } from '../api/models/read/recipe.interface';
 import { map } from 'rxjs/operators';
 import { UpdateRecipe } from '../api/models/write/update-recipe.interface';
 import { CreateIngredient } from '../api/models/write/create-ingredient.interface';
@@ -64,10 +64,21 @@ export class RecipesEditFacade {
         this.store.dispatch(new actions.GetRecipe(recipeId));
     }
 
+    public fetchIngredientCategories() {
+        this.store.dispatch(new actions.GetIngredientCategories());
+    }
+
     public getRecipe(): Observable<Recipe> {
         return this.store.pipe(
             select(selectors.recipeEditState),
             map(s => s.recipe)
+        );
+    }
+
+    public getIngredientCategories(): Observable<IngredientCategory[]> {
+        return this.store.pipe(
+            select(selectors.recipeEditState),
+            map(s => s.ingredientCategories)
         );
     }
 
