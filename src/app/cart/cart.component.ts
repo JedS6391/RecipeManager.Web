@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
-import { Cart, CartItem } from './api/models/read/cart.interface';
-import { Recipe } from '../recipes/api/models/read/recipe.interface';
+import { CartItem } from './api/models/read/cart.interface';
+import { Recipe, IngredientCategory } from '../recipes/api/models/read/recipe.interface';
 import { CartService } from './service/cart.service';
 
-interface CartDisplayItem {
+interface RecipeGroupedCartDisplayItem {
   recipe: {
     id: string;
     name: string;
@@ -14,9 +14,30 @@ interface CartDisplayItem {
   ingredients: {
     id: string;
     name: string;
-    amount: string
+    amount: string;
+    category: {
+      id: string;
+      name: string;
+    };
   }[];
 }
+
+
+interface IngredientCategoryGroupedCartDisplayItem {
+  category: {
+    id: string;
+    name: string;
+  };
+  ingredients: {
+    id: string;
+    name: string;
+    amount: string;
+  }[];
+}
+
+type CartDisplayItem = RecipeGroupedCartDisplayItem | IngredientCategoryGroupedCartDisplayItem;
+
+type CartItemGrouping = 'recipe' | 'ingredient category';
 
 @Component({
   selector: 'app-cart',
@@ -25,6 +46,7 @@ interface CartDisplayItem {
 })
 export class CartComponent implements OnInit {
   public showCart = false;
+  public groupingMode: CartItemGrouping = 'recipe';
 
   public cartDisplayItems$: Observable<CartDisplayItem[]>;
 
@@ -35,9 +57,7 @@ export class CartComponent implements OnInit {
   ngOnInit() {
     this.cartService.initialise();
 
-    this.cartDisplayItems$ = combineLatest([this.cartService.cartItemsByRecipe$, this.cartService.recipesInCartLookup$]).pipe(
-      map(([cartItemsByRecipe, recipesInCartLookup]) => this.buildCartDisplayItems(cartItemsByRecipe, recipesInCartLookup))
-    );
+    this.loadCartDisplayItems();
   }
 
   public toggleCart(): void {
@@ -48,26 +68,80 @@ export class CartComponent implements OnInit {
     this.cartService.clearCart();
   }
 
-  private buildCartDisplayItems(cartItemsByRecipe: Map<string, CartItem[]>, recipesInCartLookup: Map<string, Recipe>): CartDisplayItem[] {
+  public changeCartItemGroupingMode(groupingMode: CartItemGrouping) {
+    this.groupingMode = groupingMode;
 
-    return Array.from(cartItemsByRecipe, ([recipeId, cartItems]) => {
-      const recipe = recipesInCartLookup.get(recipeId);
+    this.loadCartDisplayItems();
+  }
 
-      if (recipe !== undefined) {
-        return {
-          recipe: {
-            id: recipe.id,
-            name: recipe.name
-          },
-          ingredients: cartItems.map(cartItem => {
+  private loadCartDisplayItems() {
+    this.cartDisplayItems$ = combineLatest([
+      this.cartService.cartItemsByRecipe$,
+      this.cartService.cartItemsByIngredientCategory$,
+      this.cartService.recipesLookup$,
+      this.cartService.ingredientCategoriesLookup$
+    ]).pipe(
+      map(([
+        cartItemsByRecipe,
+        cartItemsByIgnredientCategory,
+        recipesLookup,
+        ingredientCategoriesLookup
+      ]) => this.buildCartDisplayItems(cartItemsByRecipe, cartItemsByIgnredientCategory, recipesLookup, ingredientCategoriesLookup))
+    );
+  }
+
+  private buildCartDisplayItems(
+    cartItemsByRecipe: Map<string, CartItem[]>,
+    cartItemsByIngredientCategory: Map<string, CartItem[]>,
+    recipesLookup: Map<string, Recipe>,
+    ingredientCategoriesLookup: Map<string, IngredientCategory>
+  ): CartDisplayItem[] {
+    if (this.groupingMode === 'recipe') {
+      return Array.from(cartItemsByRecipe, ([recipeId, cartItems]) => {
+        const recipe = recipesLookup.get(recipeId);
+
+        if (recipe !== undefined) {
+          return {
+            recipe: {
+              id: recipe.id,
+              name: recipe.name
+            },
+            ingredients: cartItems.map(cartItem => {
+              return {
+                id: cartItem.ingredient.id,
+                name: cartItem.ingredient.name,
+                amount: cartItem.ingredient.amount,
+                category: {
+                  id: cartItem.ingredient.category.id,
+                  name: cartItem.ingredient.category.name
+                }
+              };
+            })
+          } as RecipeGroupedCartDisplayItem;
+        }
+      });
+    }
+
+    if (this.groupingMode === 'ingredient category') {
+      return Array.from(cartItemsByIngredientCategory, ([ingredientCategoryId, cartItems]) => {
+        const ingredientCategory = ingredientCategoriesLookup.get(ingredientCategoryId);
+
+        if (ingredientCategory !== undefined) {
             return {
-              id: cartItem.ingredient.id,
-              name: cartItem.ingredient.name,
-              amount: cartItem.ingredient.amount
-            };
-          })
-        } as CartDisplayItem;
-      }
-    });
+              category: {
+                id: ingredientCategory.id,
+                name: ingredientCategory.name
+              },
+              ingredients: cartItems.map(cartItem => {
+                return {
+                  id: cartItem.ingredient.id,
+                  name: cartItem.ingredient.name,
+                  amount: cartItem.ingredient.amount
+                };
+              })
+            } as IngredientCategoryGroupedCartDisplayItem;
+        }
+      });
+    }
   }
 }

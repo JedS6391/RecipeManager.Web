@@ -3,38 +3,53 @@ import { Observable, combineLatest } from 'rxjs';
 import { CartItem, Cart } from '../api/models/read/cart.interface';
 import { filter, map } from 'rxjs/operators';
 
-import { RecipesListFacade } from '../../recipes/store/recipes-store.facade';
+import { RecipesListFacade, RecipesEditFacade } from '../../recipes/store/recipes-store.facade';
 import { CartFacade } from '../store/cart-store.facade';
-import { Recipe } from '../../recipes/api/models/read/recipe.interface';
+import { Recipe, IngredientCategory } from '../../recipes/api/models/read/recipe.interface';
 import { CartItemUpdate } from '../api/models/write/update-cart-items';
 
 
 @Injectable()
 export class CartService {
     public cartItemsByRecipe$: Observable<Map<string, CartItem[]>>;
-    public recipesInCartLookup$: Observable<Map<string, Recipe>>;
+    public cartItemsByIngredientCategory$: Observable<Map<string, CartItem[]>>;
+    public recipesLookup$: Observable<Map<string, Recipe>>;
+    public ingredientCategoriesLookup$: Observable<Map<string, IngredientCategory>>;
 
     private cart$: Observable<Cart>;
     private recipes$: Observable<Recipe[]>;
+    private ingredientCategories$: Observable<IngredientCategory[]>;
 
     private isInitialised = false;
     private cartItemsByRecipe: Map<string, CartItem[]>;
 
     constructor(
         private recipesListFacade: RecipesListFacade,
+        private recipesEditFacade: RecipesEditFacade,
         private cartFacade: CartFacade
     ) {
         this.cart$ = this.cartFacade.getCart();
         this.recipes$ = this.recipesListFacade.getAllRecipes();
+        this.ingredientCategories$ = this.recipesEditFacade.getIngredientCategories();
 
         this.cartItemsByRecipe$ = this.cart$.pipe(
           filter(cart => cart !== null),
           map(this.buildCartItemsByRecipeLookup)
         );
 
-        this.recipesInCartLookup$ = combineLatest([this.recipes$, this.cartItemsByRecipe$]).pipe(
-            filter(([recipes, cartItemsByRecipe]) => recipes !== null && recipes.length > 0 && cartItemsByRecipe.size > 0),
-            map(([recipes, cartItemsByRecipe]) => this.buildRecipesInCartLookup(recipes, cartItemsByRecipe))
+        this.cartItemsByIngredientCategory$ = this.cart$.pipe(
+            filter(cart => cart !== null),
+            map(this.buildCartItemsByIngredientCategoryLookup)
+        );
+
+        this.recipesLookup$ = this.recipes$.pipe(
+            filter(recipes => recipes !== null && recipes.length > 0),
+            map(this.buildRecipesLookup)
+        );
+
+        this.ingredientCategoriesLookup$ = this.ingredientCategories$.pipe(
+            filter(ingredientCategories => ingredientCategories !== null && ingredientCategories.length > 0),
+            map(this.buildIngredientCategoriesLookup)
         );
 
         this.cartItemsByRecipe$.subscribe(cartItemsByRecipe => this.cartItemsByRecipe = cartItemsByRecipe);
@@ -44,6 +59,7 @@ export class CartService {
         if (!this.isInitialised) {
             this.cartFacade.fetchCart();
             this.recipesListFacade.fetchAllRecipes();
+            this.recipesEditFacade.fetchIngredientCategories();
 
             this.isInitialised = true;
         }
@@ -95,10 +111,28 @@ export class CartService {
         return cartItemsByRecipe;
     }
 
-    private buildRecipesInCartLookup(recipes: Recipe[], cartItemsByRecipe: Map<string, CartItem[]>): Map<string, Recipe> {
-        return new Map(recipes
-            .filter(recipe => cartItemsByRecipe.has(recipe.id))
-            .map(recipe => [recipe.id, recipe]));
+    private buildCartItemsByIngredientCategoryLookup(cart: Cart): Map<string, CartItem[]> {
+        const cartItemsByIngredientCategory = new Map<string, CartItem[]>();
+
+        cart.items.forEach(cartItem => {
+            const ingredientCategoryId = cartItem.ingredient.category.id;
+
+            if (cartItemsByIngredientCategory.has(ingredientCategoryId)) {
+                cartItemsByIngredientCategory.get(ingredientCategoryId).push(cartItem);
+            } else {
+                cartItemsByIngredientCategory.set(ingredientCategoryId, [cartItem]);
+            }
+        });
+
+        return cartItemsByIngredientCategory;
+    }
+
+    private buildRecipesLookup(recipes: Recipe[]): Map<string, Recipe> {
+        return new Map(recipes.map(recipe => [recipe.id, recipe]));
+    }
+
+    private buildIngredientCategoriesLookup(ingredientCategories: IngredientCategory[]): Map<string, IngredientCategory> {
+        return new Map(ingredientCategories.map(ingredientCategory => [ingredientCategory.id, ingredientCategory]));
     }
 
     private ensureInitialised(): void {
