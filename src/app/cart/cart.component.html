@@ -19,7 +19,7 @@
         <div *ngIf="!(isLoading$ | async)">
             <p *ngIf="(cartDisplayItems$ | async)?.length === 0">No items in your cart.</p>
             <app-cart-item 
-                *ngFor="let displayItem of cartDisplayItems$ | async" class="c cart-item-recipe-grouping"
+                *ngFor="let displayItem of cartDisplayItems$ | async" class="c cart-item-wrapper"
                 [displayItem]="displayItem"
                 [groupingMode]="groupingMode">
             </app-cart-item >
