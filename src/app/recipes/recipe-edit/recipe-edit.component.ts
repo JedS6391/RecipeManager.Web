@@ -19,6 +19,7 @@ export class RecipeEditComponent implements OnInit {
   public form: FormGroup;
 
   public isSaving$: Observable<boolean>;
+  public isLoading$: Observable<boolean>;
   public saveSuccessful$: Observable<boolean>;
   public recipe$: Observable<Recipe>;
 
@@ -53,6 +54,7 @@ export class RecipeEditComponent implements OnInit {
 
     this.recipe$ = this.recipesEditFacade.getRecipe();
     this.isSaving$ = this.recipesEditFacade.isSaving();
+    this.isLoading$ = this.recipesEditFacade.isLoading();
     this.saveSuccessful$ = this.recipesEditFacade.isSaveSuccessful();
 
     // Update form each time the recipe changes

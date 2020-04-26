@@ -1,32 +1,33 @@
 <div class="c">
   <app-profile [title]="'Recipes'"></app-profile>
 
-  <app-spinner *ngIf="isLoading$ | async" [colour]="'#333'"></app-spinner>
+  <div class="card">
+    <app-spinner *ngIf="isLoading$ | async" [colour]="'#333'"></app-spinner>
+    <div *ngIf="!(isLoading$ | async)">
+      <div class="row">
+          <div class="11 col"></div>
+          <div class="1 col">
+            <a [routerLink]="['new']" class="btn primary new-button"><i class="fas fa-plus"></i></a>
+          </div>
+      </div>
 
-  <div *ngIf="!(isLoading$ | async)" class="card">
-    <div class="row">
-        <div class="11 col"></div>
-        <div class="1 col">
-          <a [routerLink]="['new']" class="btn primary new-button"><i class="fas fa-plus"></i></a>
-        </div>
-    </div>
-
-    <table class="w-100">
-      <thead>
-          <tr>
-              <th>Name</th>
-              <th></th>    
-              <th></th>          
+      <table class="w-100" *ngIf="!(isLoading$ | async)">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>    
+                <th></th>          
+            </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let recipe of recipes$ | async">
+            <td class="10 col"><a [routerLink]="[recipe.id]">{{ recipe.name }}</a></td>
+            <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn"><i class="fas fa-pencil-alt"></i></a></td>
+            <td class="1 col"><a (click)="addRecipeToCart(recipe)" class="btn" ><i class="fas fa-cart-plus"></i></a></td>
           </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let recipe of recipes$ | async">
-          <td class="10 col"><a [routerLink]="[recipe.id]">{{ recipe.name }}</a></td>
-          <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn"><i class="fas fa-pencil-alt"></i></a></td>
-          <td class="1 col"><a (click)="addRecipeToCart(recipe)" class="btn" ><i class="fas fa-cart-plus"></i></a></td>
-        </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

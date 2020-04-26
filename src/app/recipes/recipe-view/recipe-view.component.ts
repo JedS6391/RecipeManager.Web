@@ -13,6 +13,7 @@ import { RecipesEditFacade } from '../store/recipes-store.facade';
 export class RecipeViewComponent implements OnInit {
   public recipeId: string;
   public recipe$: Observable<Recipe>;
+  public isLoading$: Observable<boolean>;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,6 +28,7 @@ export class RecipeViewComponent implements OnInit {
     });
 
     this.recipe$ = this.recipesEditFacade.getRecipe();
+    this.isLoading$ = this.recipesEditFacade.isLoading();
 
     this.recipe$.subscribe(recipe => this.recipeId = recipe.id);
   }

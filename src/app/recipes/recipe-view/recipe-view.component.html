@@ -6,41 +6,44 @@
     </app-profile>
   
     <div class="card">      
-        <div class="row">
-            <div class="11 col"></div>
-            <div class="1 col">
-                <a [routerLink]="['../edit/', recipeId]" class="btn primary">Edit</a>
+        <app-spinner *ngIf="(isLoading$ | async)" [colour]="'#333'"></app-spinner>
+        <div *ngIf="!(isLoading$ | async)">
+            <div class="row">
+                <div class="11 col"></div>
+                <div class="1 col">
+                    <a [routerLink]="['../edit/', recipeId]" class="btn primary">Edit</a>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="6 col">
+            <div class="row">
+                <div class="6 col">
+                </div>
+                <div class="6 col">
+                </div>
             </div>
-            <div class="6 col">
+            <div class="row card">
+                <table class="w-100">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let ingredient of (recipe$ | async).ingredients">
+                            <td class="8 col">
+                                {{ ingredient.name }}
+                            </td>
+                            <td class="2 col">
+                                {{ ingredient.amount }}
+                            </td>
+                            <td class="2 col">
+                                {{ ingredient.category.name }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-        <div class="row card">
-            <table class="w-100">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Amount</th>
-                        <th>Category</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let ingredient of (recipe$ | async).ingredients">
-                        <td class="8 col">
-                            {{ ingredient.name }}
-                        </td>
-                        <td class="2 col">
-                            {{ ingredient.amount }}
-                        </td>
-                        <td class="2 col">
-                            {{ ingredient.category.name }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
   </div>

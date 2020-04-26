@@ -93,6 +93,13 @@ export class RecipesEditFacade {
         );
     }
 
+    public isLoading(): Observable<boolean> {
+        return this.store.pipe(
+            select(selectors.recipeEditState),
+            map(s => s.isLoading)
+        );
+    }
+
     public isSaveSuccessful(): Observable<boolean> {
         return this.store.pipe(
             select(selectors.recipeEditState),
