@@ -123,3 +123,24 @@ export class UpdateRecipeIngredientsAction implements Action {
         public error: (Error) => Action
     ) {}
 }
+
+export class DeleteRecipeAction implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} DELETE RECIPE`;
+    public readonly type = DeleteRecipeAction.TYPE;
+
+    constructor(public recipeId: string) {}
+}
+
+export class DeleteRecipeSuccess implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} DELETE RECIPE SUCCESS`;
+    public readonly type = DeleteRecipeSuccess.TYPE;
+
+    constructor() {}
+}
+
+export class DeleteRecipeFailure implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} DELETE RECIPE FAILURE`;
+    public readonly type = DeleteRecipeFailure.TYPE;
+
+    constructor(public error: Error) {}
+}

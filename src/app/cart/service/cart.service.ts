@@ -102,6 +102,10 @@ export class CartService {
         this.cartFacade.updateCurrentCartItems([]);
     }
 
+    public refreshCart() {
+        this.cartFacade.fetchCart();
+    }
+
     private buildCartItemsByRecipeLookup(cart: Cart): Map<string, CartItem[]> {
         const cartItemsByRecipe = new Map<string, CartItem[]>();
 

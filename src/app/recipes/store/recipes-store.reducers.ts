@@ -44,6 +44,8 @@ const handlerMap: ActionHandlerMap<RecipeState> = {
     [actions.CreateRecipeSuccess.TYPE]: createRecipeSuccessHandler,
     [actions.UpdateRecipeAction.TYPE]: updateRecipeHandler,
     [actions.UpdateRecipeSuccess.TYPE]: updateRecipeSuccessHandler,
+    [actions.DeleteRecipeAction.TYPE]: deleteRecipeHandler,
+    [actions.DeleteRecipeSuccess.TYPE]: deleteRecipeSuccessHandler
 };
 
 export function recipesReducer(state: RecipeState = RECIPES_INITIAL_STATE, action: Action): RecipeState {
@@ -177,5 +179,28 @@ function updateRecipeSuccessHandler(state: RecipeState, action: actions.UpdateRe
             recipe: action.recipe,
             ingredientCategories: state.edit.ingredientCategories
         }
+    };
+}
+
+
+function deleteRecipeHandler(state: RecipeState): RecipeState {
+    return {
+        list: {
+            isLoading: true,
+            recipes: state.list.recipes
+        },
+        create: state.create,
+        edit: state.edit
+    };
+}
+
+function deleteRecipeSuccessHandler(state: RecipeState): RecipeState {
+    return {
+        list: {
+            isLoading: false,
+            recipes: state.list.recipes
+        },
+        create: state.create,
+        edit: state.edit
     };
 }
