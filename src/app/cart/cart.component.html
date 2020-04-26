@@ -1,38 +1,28 @@
 <div class="cart-toggle">
     <a (click)="toggleCart()" class="btn"><i class="fas fa-shopping-cart"></i></a>
 </div>
-<div class="cart" [ngClass]="{ 'cart-visible': showCart }">
+<div class="cart" [ngClass]="{ 'cart-visible': cartShowing }">
     <a (click)="toggleCart()" class="cart-closebutton">&times;</a>
     <div class="cart-content">
         <h4>Cart</h4>
         <hr>
         <div>
-            <button [matMenuTriggerFor]="menu" class="btn"><i class="fas fa-list"></i></button>
+            <button *ngIf="(cartDisplayItems$ | async)?.length > 0" [matMenuTriggerFor]="menu" class="btn"><i class="fas fa-list"></i></button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="changeCartItemGroupingMode('recipe')">Group by recipe</button>
                 <button mat-menu-item (click)="changeCartItemGroupingMode('ingredientCategory')">Group by ingredient category</button>
             </mat-menu>
-            <button *ngIf="(cartDisplayItems$ | async)?.length > 0" (click)="clearCart()" class="btn">Clear</button>
+            <button *ngIf="(cartDisplayItems$ | async)?.length > 0" (click)="clearCart()" class="btn"><i class="fas fa-trash-alt"></i></button>
+            <button *ngIf="(cartDisplayItems$ | async)?.length > 0" (click)="exportCart()" class="btn"><i class="fas fa-file-export"></i></button>
         </div>
-        <div *ngIf="groupingMode == 'recipe'">
-            <div *ngFor="let displayItem of cartDisplayItems$ | async" class="c">
-                <b>{{ displayItem.recipe.name }}</b>
-                <ul>
-                    <li *ngFor="let ingredient of displayItem.ingredients">
-                        {{ ingredient.name}} | {{ ingredient.amount }}
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div *ngIf="groupingMode == 'ingredientCategory'">
-            <div *ngFor="let displayItem of cartDisplayItems$ | async" class="c">
-                <b>{{ displayItem.category.name }}</b>
-                <ul>
-                    <li *ngFor="let ingredient of displayItem.ingredients">
-                        {{ ingredient.name}} | {{ ingredient.amount }}
-                    </li>
-                </ul>
-            </div>
+        <app-spinner *ngIf="isLoading$ | async"></app-spinner>
+        <div *ngIf="!(isLoading$ | async)">
+            <p *ngIf="(cartDisplayItems$ | async)?.length === 0">No items in your cart.</p>
+            <app-cart-item 
+                *ngFor="let displayItem of cartDisplayItems$ | async" class="c cart-item-recipe-grouping"
+                [displayItem]="displayItem"
+                [groupingMode]="groupingMode">
+            </app-cart-item >
         </div>
     </div>
 </div>

@@ -26,7 +26,7 @@ export class RecipeListComponent implements OnInit {
       private recipesListFacade: RecipesListFacade,
       private dialog: MatDialog,
       private cartService: CartService,
-      private messagingService: MessagingService
+      private messagingService: MessagingService,
     ) { }
 
     ngOnInit(): void {
@@ -56,6 +56,9 @@ export class RecipeListComponent implements OnInit {
             ingredientId: ingredient.id
           }))
         );
+
+        // Show the cart
+        this.cartService.cartShowing$.next(true);
 
         this.messagingService.showMessage(`${result.recipeName} added to cart!`, {
           duration: 2000

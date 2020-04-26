@@ -1,7 +1,7 @@
 <div class="c">
   <app-profile [title]="'Recipes'"></app-profile>
 
-  <app-spinner *ngIf="isLoading$ | async"></app-spinner>
+  <app-spinner *ngIf="isLoading$ | async" [colour]="'#333'"></app-spinner>
 
   <div *ngIf="!(isLoading$ | async)" class="card">
     <div class="row">

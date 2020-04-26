@@ -6,7 +6,7 @@
     </app-profile>
   
     <div class="card">  
-      <app-spinner *ngIf="isSaving$ | async"></app-spinner>
+      <app-spinner *ngIf="isSaving$ | async" [colour]="'#333'"></app-spinner>
       <form [formGroup]="form" (ngSubmit)=submitForm() *ngIf="!(isSaving$ | async)">
         <div class="row">
             <div class="11 col"></div>

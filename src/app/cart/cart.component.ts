@@ -5,38 +5,14 @@ import { map } from 'rxjs/operators';
 import { CartItem } from './api/models/read/cart.interface';
 import { Recipe, IngredientCategory } from '../recipes/api/models/read/recipe.interface';
 import { CartService } from './service/cart.service';
-
-interface RecipeGroupedCartDisplayItem {
-  recipe: {
-    id: string;
-    name: string;
-  };
-  ingredients: {
-    id: string;
-    name: string;
-    amount: string;
-    category: {
-      id: string;
-      name: string;
-    };
-  }[];
-}
-
-interface IngredientCategoryGroupedCartDisplayItem {
-  category: {
-    id: string;
-    name: string;
-  };
-  ingredients: {
-    id: string;
-    name: string;
-    amount: string;
-  }[];
-}
-
-type CartDisplayItem = RecipeGroupedCartDisplayItem | IngredientCategoryGroupedCartDisplayItem;
-
-type CartItemGrouping = 'recipe' | 'ingredientCategory';
+import { CartFacade } from './store/cart-store.facade';
+import { CartItemGrouping } from './cart-item/models/grouping-mode';
+import {
+  CartDisplayItem,
+  RecipeGroupedCartDisplayItem,
+  IngredientCategoryGroupedCartDisplayItem
+} from './cart-item/models/cart-display-item.interface';
+import { CartExportService } from './service/cart-exporter.service';
 
 interface CartDisplayItemBuilderParameters {
   cartItemsByRecipe: Map<string, CartItem[]>;
@@ -51,10 +27,13 @@ interface CartDisplayItemBuilderParameters {
   styleUrls: ['./cart.component.scss']
 })
 export class CartComponent implements OnInit {
-  public showCart = false;
   public groupingMode: CartItemGrouping = 'recipe';
 
+  public showCart$: Observable<boolean>;
+  public isLoading$: Observable<boolean>;
   public cartDisplayItems$: Observable<CartDisplayItem[]>;
+
+  private cartShowing = false;
 
   private cartDisplayItemBuilders = {
     recipe: this.buildCartDisplayItemsByRecipe,
@@ -62,17 +41,29 @@ export class CartComponent implements OnInit {
   };
 
   constructor(
-    private cartService: CartService
+    private cartService: CartService,
+    private cartExportService: CartExportService,
+    private cartFacade: CartFacade
   ) { }
 
   ngOnInit() {
     this.cartService.initialise();
+    this.cartExportService.initialise();
+
+    this.showCart$ = this.cartService.cartShowing$;
+    this.isLoading$ = this.cartFacade.isLoading();
+
+    // Ensure that if other sources toggle the cart then we show it.
+    this.showCart$.subscribe(showCart => this.cartShowing = showCart);
 
     this.loadCartDisplayItems();
   }
 
   public toggleCart(): void {
-    this.showCart = !this.showCart;
+    this.cartShowing = !this.cartShowing;
+
+    // Update other sources of the cart toggle change.
+    this.cartService.cartShowing$.next(this.cartShowing);
   }
 
   public clearCart(): void {
@@ -83,6 +74,10 @@ export class CartComponent implements OnInit {
     this.groupingMode = groupingMode;
 
     this.loadCartDisplayItems();
+  }
+
+  public exportCart() {
+    this.cartExportService.exportCurrentCart(this.groupingMode);
   }
 
   private loadCartDisplayItems() {

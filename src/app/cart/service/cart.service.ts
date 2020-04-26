@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { CartItem, Cart } from '../api/models/read/cart.interface';
 import { filter, map } from 'rxjs/operators';
 
@@ -15,8 +15,9 @@ export class CartService {
     public cartItemsByIngredientCategory$: Observable<Map<string, CartItem[]>>;
     public recipesLookup$: Observable<Map<string, Recipe>>;
     public ingredientCategoriesLookup$: Observable<Map<string, IngredientCategory>>;
+    public cartShowing$ = new BehaviorSubject<boolean>(false);
+    public cart$: Observable<Cart>;
 
-    private cart$: Observable<Cart>;
     private recipes$: Observable<Recipe[]>;
     private ingredientCategories$: Observable<IngredientCategory[]>;
 
@@ -78,7 +79,7 @@ export class CartService {
 
         const existingCartItemUpdates = Array.from(this.cartItemsByRecipe.entries())
             .filter(([recipe, _]) => recipe !== recipeId)
-            .map(([recipe, cartItems]) => {
+            .map(([_, cartItems]) => {
                 return cartItems.map(cartItem => ({
                     ingredientId: cartItem.ingredient.id
                 }));
