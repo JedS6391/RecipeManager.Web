@@ -90,6 +90,12 @@ export class CartService {
         this.cartFacade.updateCurrentCartItems(cartItemUpdatesToApply);
     }
 
+    public updateCartItems(cartItemUpdates: CartItemUpdate[]) {
+        this.ensureInitialised();
+
+        this.cartFacade.updateCurrentCartItems(cartItemUpdates);
+    }
+
     public clearCart() {
         this.ensureInitialised();
 

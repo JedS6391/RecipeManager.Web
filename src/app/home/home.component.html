@@ -7,13 +7,13 @@
     </div>
 
     <div class="card">
-        <div *ngIf="!authenticationService.loggedIn" class="row">            
+        <div *ngIf="!(authenticationService.isAuthenticated$ | async)" class="row">            
             <p>Please log in to view and manage the recipes for your account.</p>
 
             <button (click)="authenticationService.login('recipes')" class="btn primary">Log In</button>
         </div>
 
-        <div *ngIf="authenticationService.loggedIn" class="row">
+        <div *ngIf="authenticationService.isAuthenticated$ | async" class="row">
             <p>Click below to view your recipes.</p>
 
             <a [routerLink]="['../recipes']" class="btn primary">View recipes</a>

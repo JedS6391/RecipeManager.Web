@@ -28,12 +28,11 @@ interface CartDisplayItemBuilderParameters {
 })
 export class CartComponent implements OnInit {
   public groupingMode: CartItemGrouping = 'recipe';
+  public cartShowing = false;
 
   public showCart$: Observable<boolean>;
   public isLoading$: Observable<boolean>;
   public cartDisplayItems$: Observable<CartDisplayItem[]>;
-
-  private cartShowing = false;
 
   private cartDisplayItemBuilders = {
     recipe: this.buildCartDisplayItemsByRecipe,
@@ -121,6 +120,7 @@ export class CartComponent implements OnInit {
 
       if (recipe !== undefined) {
         return {
+          id: `${this.groupingMode}-${recipe.id}`,
           recipe: {
             id: recipe.id,
             name: recipe.name
@@ -130,10 +130,7 @@ export class CartComponent implements OnInit {
               id: cartItem.ingredient.id,
               name: cartItem.ingredient.name,
               amount: cartItem.ingredient.amount,
-              category: {
-                id: cartItem.ingredient.category.id,
-                name: cartItem.ingredient.category.name
-              }
+              recipeId: cartItem.ingredient.recipeId
             };
           })
         } as RecipeGroupedCartDisplayItem;
@@ -150,6 +147,7 @@ export class CartComponent implements OnInit {
 
       if (ingredientCategory !== undefined) {
           return {
+            id: `${this.groupingMode}-${ingredientCategory.id}`,
             category: {
               id: ingredientCategory.id,
               name: ingredientCategory.name
@@ -158,7 +156,8 @@ export class CartComponent implements OnInit {
               return {
                 id: cartItem.ingredient.id,
                 name: cartItem.ingredient.name,
-                amount: cartItem.ingredient.amount
+                amount: cartItem.ingredient.amount,
+                recipeId: cartItem.ingredient.recipeId
               };
             })
           } as IngredientCategoryGroupedCartDisplayItem;

@@ -1,8 +1,8 @@
 <div class="c cart-item">
     <b>{{ cartItemTitle }}</b>
     <div class="cart-item-actions">
-        <a (click)="editCartItem(displayItem.recipe.id)" class="cart-item-action"><small><i class="fas fa-pencil-alt"></i></small></a>
-        <a (click)="removeCartItem(displayItem.recipe.id)" class="cart-item-action"><small><i class="fas fa-trash-alt"></i></small></a>
+        <a (click)="editCartItem(displayItem)" class="cart-item-action"><small><i class="fas fa-pencil-alt"></i></small></a>
+        <a (click)="removeCartItem(displayItem)" class="cart-item-action"><small><i class="fas fa-trash-alt"></i></small></a>
     </div>
     <div class="cart-item-ingredient-list">
         <p *ngFor="let ingredient of displayItem.ingredients">

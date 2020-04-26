@@ -17,6 +17,8 @@ import {
   AddRecipeToCartComponent,
   AddRecipeToCartComponentResult
 } from '../add-recipe-to-cart/add-recipe-to-cart.component';
+import { CartItem } from '../api/models/read/cart.interface';
+import { CartItemUpdate } from '../api/models/write/update-cart-items';
 
 @Component({
   selector: 'app-cart-item',
@@ -32,6 +34,7 @@ export class CartItemComponent implements OnInit, OnDestroy {
 
   private destroyed$ = new Subject();
   private recipesLookup: Map<string, Recipe>;
+  private cartItemsByRecipe: Map<string, CartItem[]>;
 
   constructor(
     private cartService: CartService,
@@ -43,6 +46,10 @@ export class CartItemComponent implements OnInit, OnDestroy {
     this.cartService.recipesLookup$.pipe(
       takeUntil(this.destroyed$)
     ).subscribe(recipesLookup => this.recipesLookup = recipesLookup);
+
+    this.cartService.cartItemsByRecipe$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(cartItemsByRecipe => this.cartItemsByRecipe = cartItemsByRecipe);
   }
 
   ngOnDestroy() {
@@ -59,36 +66,74 @@ export class CartItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  public editCartItem(recipeId: string) {
-    const recipe = this.recipesLookup.get(recipeId);
+  public editCartItem(displayItem: CartDisplayItem) {
+    const recipeIds = new Set<string>();
 
-    const addToRecipeCartData: AddRecipeToCartComponentData = {
-      recipe
-    };
+    // Only a single recipe to edit cart items for.
+    if (this.groupingMode === 'recipe') {
+      recipeIds.add((displayItem as RecipeGroupedCartDisplayItem).recipe.id);
+    }
 
-    const dialogReference = this.dialog.open(AddRecipeToCartComponent, {
-      height: '400px',
-      width: '600px',
-      data: addToRecipeCartData
-    });
-
-    dialogReference.afterClosed().pipe(
-      filter((result: AddRecipeToCartComponentResult) => !result.isCancelled)
-    ).subscribe((result: AddRecipeToCartComponentResult) => {
-      this.cartService.updateCartItemsForRecipe(
-        result.recipeId,
-        result.selectedIngredients.map(ingredient => ({
-          ingredientId: ingredient.id
-        }))
+    // May be multiple recipes to edit cart items for.
+    if (this.groupingMode === 'ingredientCategory') {
+      (displayItem as IngredientCategoryGroupedCartDisplayItem).ingredients.map(ingredient => ingredient.recipeId).forEach(recipeId =>
+        recipeIds.add(recipeId)
       );
+    }
 
-      this.messagingService.showMessage(`Cart items for ${result.recipeName} updated!`, {
-        duration: 2000
+    recipeIds.forEach(recipeId => {
+      const recipe = this.recipesLookup.get(recipeId);
+
+      const addToRecipeCartData: AddRecipeToCartComponentData = {
+        recipe
+      };
+
+      const dialogReference = this.dialog.open(AddRecipeToCartComponent, {
+        height: '400px',
+        width: '600px',
+        data: addToRecipeCartData
+      });
+
+      dialogReference.afterClosed().pipe(
+        filter((result: AddRecipeToCartComponentResult) => !result.isCancelled)
+      ).subscribe((result: AddRecipeToCartComponentResult) => {
+        this.cartService.updateCartItemsForRecipe(
+          result.recipeId,
+          result.selectedIngredients.map(ingredient => ({
+            ingredientId: ingredient.id
+          }))
+        );
+
+        this.messagingService.showMessage(`Cart items for ${result.recipeName} updated!`, {
+          duration: 2000
+        });
       });
     });
   }
 
-  public removeCartItem(recipeId: string) {
-    this.cartService.updateCartItemsForRecipe(recipeId, []);
+  public removeCartItem(displayItem: CartDisplayItem) {
+    // Only a single recipe to remove from the cart.
+    if (this.groupingMode === 'recipe') {
+      this.cartService.updateCartItemsForRecipe((displayItem as RecipeGroupedCartDisplayItem).recipe.id, []);
+    }
+
+    // Need to remove all ingredients for this category from all recipes currently in the cart.
+    // Simplest way to do this is to get the current cart items and exlude any that match the
+    // category to be removed.
+    if (this.groupingMode === 'ingredientCategory') {
+      const category = (displayItem as IngredientCategoryGroupedCartDisplayItem).category;
+
+      const cartItemUpdatesPerRecipe = Array.from(this.cartItemsByRecipe, ([_, cartItems]) => {
+        return cartItems
+          .filter(cartItem => cartItem.ingredient.category.id !== category.id)
+          .map(cartItem => ({
+            ingredientId: cartItem.ingredient.id
+          }) as CartItemUpdate);
+      });
+
+      const cartItemUpdates: CartItemUpdate[] = [].concat(...cartItemUpdatesPerRecipe);
+
+      this.cartService.updateCartItems(cartItemUpdates);
+    }
   }
 }

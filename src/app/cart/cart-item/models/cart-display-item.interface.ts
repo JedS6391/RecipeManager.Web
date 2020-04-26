@@ -1,29 +1,25 @@
-export interface RecipeGroupedCartDisplayItem {
+export interface CartDisplayItemIngredient {
+    id: string;
+    name: string;
+    amount: string;
+    recipeId: string;
+}
+
+export abstract class CartDisplayItem {
+    id: string;
+    ingredients: CartDisplayItemIngredient[];
+}
+
+export class RecipeGroupedCartDisplayItem extends CartDisplayItem {
     recipe: {
         id: string;
         name: string;
     };
-    ingredients: {
-        id: string;
-        name: string;
-        amount: string;
-        category: {
-        id: string;
-        name: string;
-        };
-    }[];
 }
 
-export interface IngredientCategoryGroupedCartDisplayItem {
+export class IngredientCategoryGroupedCartDisplayItem extends CartDisplayItem {
     category: {
         id: string;
         name: string;
     };
-    ingredients: {
-        id: string;
-        name: string;
-        amount: string;
-    }[];
 }
-
-export type CartDisplayItem = RecipeGroupedCartDisplayItem | IngredientCategoryGroupedCartDisplayItem;
