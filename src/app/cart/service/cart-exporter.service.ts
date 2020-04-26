@@ -40,9 +40,7 @@ export class CartExportService {
 
         const exportedCart = this.generateCartExport(groupingMode);
 
-        const blob = new Blob([exportedCart], { type: 'text' });
-        const url = window.URL.createObjectURL(blob);
-        window.open(url);
+        this.triggerDownload(exportedCart);
     }
 
     private generateCartExport(groupingMode: CartItemGrouping): string {
@@ -78,6 +76,24 @@ export class CartExportService {
                 lookup: this.ingredientCategoriesLookup
             };
         }
+    }
+
+    private triggerDownload(exportedCart: string) {
+        const element = document.createElement('a');
+
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportedCart));
+        element.setAttribute('download', 'Cart export');
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+
+        // const blob = new Blob([exportedCart], { type: 'text' });
+        // const url = window.URL.createObjectURL(blob);
+        // window.open(url);
     }
 
     private ensureInitialised(): void {
