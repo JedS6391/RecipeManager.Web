@@ -76,4 +76,13 @@ export class RecipeApiService extends BaseApiService {
             refCount()
         );
     }
+
+    public deleteRecipe(recipeId: string): Observable<void> {
+        const url = `${this.baseUrl}${RECIPE_URLS.deleteRecipe(recipeId)}`;
+
+        return this.http.delete(url, {headers: this.getHeaders()}).pipe(
+            publishLast(),
+            refCount()
+        );
+    }
 }

@@ -16,7 +16,8 @@
             <tr>
                 <th>Name</th>
                 <th></th>    
-                <th></th>          
+                <th></th>    
+                <th></th>      
             </tr>
         </thead>
         <tbody>
@@ -24,6 +25,7 @@
             <td class="10 col"><a [routerLink]="[recipe.id]">{{ recipe.name }}</a></td>
             <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn"><i class="fas fa-pencil-alt"></i></a></td>
             <td class="1 col"><a (click)="addRecipeToCart(recipe)" class="btn" ><i class="fas fa-cart-plus"></i></a></td>
+            <td class="1 col"><a (click)="deleteRecipe(recipe)" class="btn" ><i class="fas fa-trash-alt"></i></a></td>
           </tr>
         </tbody>
       </table>

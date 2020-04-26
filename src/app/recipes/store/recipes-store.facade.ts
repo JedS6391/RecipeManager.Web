@@ -31,6 +31,10 @@ export class RecipesListFacade {
             map(s => s.isLoading)
         );
     }
+
+    public deleteRecipe(recipeId: string) {
+        this.store.dispatch(new actions.DeleteRecipeAction(recipeId));
+    }
 }
 
 @Injectable()
@@ -105,5 +109,9 @@ export class RecipesEditFacade {
             select(selectors.recipeEditState),
             map(s => s.saveSuccessful)
         );
+    }
+
+    public deleteRecipe(recipeId: string) {
+        this.store.dispatch(new actions.DeleteRecipeAction(recipeId));
     }
 }

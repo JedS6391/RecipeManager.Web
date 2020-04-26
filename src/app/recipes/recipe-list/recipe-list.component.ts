@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 
 import { Recipe } from '../api/models/read/recipe.interface';
 import { RecipesListFacade } from '../store/recipes-store.facade';
@@ -63,6 +63,19 @@ export class RecipeListComponent implements OnInit {
         this.messagingService.showMessage(`${result.recipeName} added to cart!`, {
           duration: 2000
         });
+      });
+    }
+
+    public deleteRecipe(recipe: Recipe) {
+      this.recipesListFacade.deleteRecipe(recipe.id);
+
+      // Refresh once the delete is done.
+      this.isLoading$.pipe(
+        filter(isLoading => !isLoading),
+        take(1)
+      ).subscribe(() => {
+        this.recipesListFacade.fetchAllRecipes();
+        this.cartService.refreshCart();
       });
     }
 }

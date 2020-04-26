@@ -4,5 +4,6 @@ export const RECIPE_URLS = {
     createRecipe: '/api/me/recipes',
     updateRecipe: (recipeId: string) => `/api/me/recipes/${recipeId}`,
     updateRecipeIngredients: (recipeId: string) => `/api/me/recipes/${recipeId}/ingredients`,
-    getIngredientCategories: '/api/me/recipes/ingredients/categories'
+    getIngredientCategories: '/api/me/recipes/ingredients/categories',
+    deleteRecipe: (recipeId: string) => `/api/me/recipes/${recipeId}`
 };

@@ -9,9 +9,12 @@
         <app-spinner *ngIf="(isLoading$ | async)" [colour]="'#333'"></app-spinner>
         <div *ngIf="!(isLoading$ | async)">
             <div class="row">
-                <div class="11 col"></div>
+                <div class="10 col"></div>
                 <div class="1 col">
-                    <a [routerLink]="['../edit/', recipeId]" class="btn primary">Edit</a>
+                    <a [routerLink]="['../edit/', recipeId]" class="btn primary"><i class="fas fa-pencil-alt"></i></a>
+                </div>
+                <div class="1 col">
+                    <a (click)="deleteRecipe(recipeId)" class="btn primary"><i class="fas fa-trash-alt"></i></a>
                 </div>
             </div>
             <div class="row">

@@ -89,6 +89,17 @@ export class RecipesEffects {
             );
         })
     );
+
+    @Effect()
+    public deleteRecipe$ = this.actions$.pipe(
+        ofType<actions.DeleteRecipeAction>(actions.DeleteRecipeAction.TYPE),
+        switchMap(action => {
+            return this.recipeApiService.deleteRecipe(action.recipeId).pipe(
+                map(() => new actions.DeleteRecipeSuccess()),
+                catchError(error => of(new actions.DeleteRecipeFailure(error)))
+            );
+        })
+    );
 }
 
 
