@@ -32,6 +32,8 @@ export class CartItemComponent implements OnInit, OnDestroy {
   @Input()
   public groupingMode: CartItemGrouping;
 
+  public collapsed = false;
+
   private destroyed$ = new Subject();
   private recipesLookup: Map<string, Recipe>;
   private cartItemsByRecipe: Map<string, CartItem[]>;
@@ -64,6 +66,10 @@ export class CartItemComponent implements OnInit, OnDestroy {
     if (this.groupingMode === 'ingredientCategory') {
       return (this.displayItem as IngredientCategoryGroupedCartDisplayItem).category.name;
     }
+  }
+
+  public toggleCollapsedState() {
+    this.collapsed = !this.collapsed;
   }
 
   public editCartItem(displayItem: CartDisplayItem) {

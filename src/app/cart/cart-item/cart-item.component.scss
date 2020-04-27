@@ -7,6 +7,10 @@
     margin-left: 10px;
 }
 
+.cart-item-ingredient-list.collapsed {
+    display: none;
+}
+
 .cart-item-actions {
     float: right;
     margin: 0;
@@ -15,3 +19,16 @@
 .cart-item-action {
     padding-left: 10px;
 }
+
+.cart-item:hover {
+    border: 1px solid #fa0;
+
+    .cart-item-title {
+        color: #fa0;
+    }
+}
+
+.cart-item-title {
+    color: white;
+}
+
