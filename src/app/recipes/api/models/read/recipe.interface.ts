@@ -3,6 +3,12 @@ export interface Recipe {
     name: string;
     ingredients: Ingredient[];
     instructions: Instruction[];
+    groups: RecipeGroup[];
+}
+
+export interface RecipeGroup {
+    id: string;
+    name: string;
 }
 
 export interface Ingredient {

@@ -1,8 +1,9 @@
 import { Action } from '@ngrx/store';
-import { Recipe, IngredientCategory } from '../api/models/read/recipe.interface';
+import { Recipe, IngredientCategory, RecipeGroup } from '../api/models/read/recipe.interface';
 import { CreateIngredient } from '../api/models/write/create-ingredient.interface';
 import { UpdateRecipe } from '../api/models/write/update-recipe.interface';
 import { CreateRecipe } from '../api/models/write/create-recipe.interface';
+import { UpdateRecipeGroups } from '../api/models/write/update-recipe-groups.interface';
 
 const RECIPES_STORE_ACTIONS_PREFIX = 'RECIPES';
 
@@ -67,6 +68,27 @@ export class GetIngredientCategoriesFailure implements Action {
     constructor(public error: Error) {}
 }
 
+export class GetRecipeGroups implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET RECIPE GROUPS`;
+    public readonly type = GetRecipeGroups.TYPE;
+
+    constructor() {}
+}
+
+export class GetRecipeGroupsSuccess implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET RECIPE GROUPS SUCCESS`;
+    public readonly type = GetRecipeGroupsSuccess.TYPE;
+
+    constructor(public recipeGroups: RecipeGroup[]) {}
+}
+
+export class GetRecipeGroupsFailure implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET RECIPE GROUPS FAILURE`;
+    public readonly type = GetRecipeGroupsFailure.TYPE;
+
+    constructor(public error: Error) {}
+}
+
 export class CreateRecipeAction implements Action {
     public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} CREATE RECIPE`;
     public readonly type = CreateRecipeAction.TYPE;
@@ -94,7 +116,8 @@ export class UpdateRecipeAction implements Action {
 
     constructor(
         public recipe: UpdateRecipe,
-        public ingredients: CreateIngredient[]
+        public ingredients: CreateIngredient[],
+        public recipeGroups: UpdateRecipeGroups
     ) {}
 }
 
@@ -119,6 +142,18 @@ export class UpdateRecipeIngredientsAction implements Action {
     constructor(
         public recipe: UpdateRecipe,
         public ingredients: CreateIngredient[],
+        public success: (Recipe) => Action,
+        public error: (Error) => Action
+    ) {}
+}
+
+export class UpdateRecipeGroupsAction implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} UPDATE RECIPE GROUPS`;
+    public readonly type = UpdateRecipeGroupsAction.TYPE;
+
+    constructor(
+        public recipe: UpdateRecipe,
+        public recipeGroups: UpdateRecipeGroups,
         public success: (Recipe) => Action,
         public error: (Error) => Action
     ) {}

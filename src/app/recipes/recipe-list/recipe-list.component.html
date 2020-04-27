@@ -5,7 +5,13 @@
     <app-spinner *ngIf="isLoading$ | async" [colour]="'#333'"></app-spinner>
     <div *ngIf="!(isLoading$ | async)">
       <div class="row">
-          <div class="11 col"></div>
+          <div class="10 col">
+            <button [matMenuTriggerFor]="menu" class="btn primary"><i class="fas fa-list"></i></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="changeRecipeListGroupingMode('none')">None</button>
+                <button mat-menu-item (click)="changeRecipeListGroupingMode('recipeGroup')">Group by recipe group</button>
+            </mat-menu>
+          </div>
           <div class="1 col">
             <a [routerLink]="['new']" class="btn primary new-button"><i class="fas fa-plus"></i></a>
           </div>
@@ -22,7 +28,12 @@
         </thead>
         <tbody>
           <tr *ngFor="let recipe of recipes$ | async">
-            <td class="10 col"><a [routerLink]="[recipe.id]">{{ recipe.name }}</a></td>
+            <td class="10 col">
+              <a [routerLink]="[recipe.id]">{{ recipe.name }}</a>
+              <mat-chip-list>
+                <mat-chip *ngFor="let group of recipe.groups">{{ group.name }}</mat-chip>
+              </mat-chip-list>
+            </td>
             <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn"><i class="fas fa-pencil-alt"></i></a></td>
             <td class="1 col"><a (click)="addRecipeToCart(recipe)" class="btn" ><i class="fas fa-cart-plus"></i></a></td>
             <td class="1 col"><a (click)="deleteRecipe(recipe)" class="btn" ><i class="fas fa-trash-alt"></i></a></td>

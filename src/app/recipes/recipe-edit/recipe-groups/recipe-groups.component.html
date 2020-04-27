@@ -1,0 +1,27 @@
+<div class="card" [formGroup]="form">
+    Groups
+    <mat-form-field class="w-100">
+      <mat-chip-list #groupChipList formArrayName="groups"> 
+        <mat-chip               
+            *ngFor="let group of groups.controls; let groupIndex = index;" 
+            [formGroupName]="groupIndex"
+          [selectable]="true"
+          [removable]="true"
+          (removed)="removeRecipeGroup(groupIndex)"
+          class="group-chip">
+          {{ group.value.name }} <i matChipRemove class="fas fa-times-circle"></i>
+        </mat-chip>
+        <input 
+          [matChipInputFor]="groupChipList"
+          [matAutocomplete]="groupAutocomplete"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="addRecipeGroup($event)">
+      </mat-chip-list>
+      <mat-autocomplete #groupAutocomplete="matAutocomplete" (optionSelected)="selectRecipeGroup($event)">
+        <mat-option *ngFor="let group of availableRecipeGroups$ | async" [value]="group">
+          {{ group.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>

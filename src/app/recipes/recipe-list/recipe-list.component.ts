@@ -78,4 +78,8 @@ export class RecipeListComponent implements OnInit {
         this.cartService.refreshCart();
       });
     }
+
+    public changeRecipeListGroupingMode(groupingMode: string) {
+      console.log(groupingMode);
+    }
 }

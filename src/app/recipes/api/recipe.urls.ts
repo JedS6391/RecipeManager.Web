@@ -1,9 +1,21 @@
+const BASE_RECIPES_PATH = '/api/me/recipes';
+
 export const RECIPE_URLS = {
-    getAllRecipes: '/api/me/recipes',
-    getRecipeById: (recipeId: string) => `/api/me/recipes/${recipeId}`,
-    createRecipe: '/api/me/recipes',
-    updateRecipe: (recipeId: string) => `/api/me/recipes/${recipeId}`,
-    updateRecipeIngredients: (recipeId: string) => `/api/me/recipes/${recipeId}/ingredients`,
-    getIngredientCategories: '/api/me/recipes/ingredients/categories',
-    deleteRecipe: (recipeId: string) => `/api/me/recipes/${recipeId}`
+    get: {
+        allRecipes: BASE_RECIPES_PATH,
+        recipeById: (recipeId: string) => `${BASE_RECIPES_PATH}/${recipeId}`,
+        ingredientCategories: `${BASE_RECIPES_PATH}/ingredients/categories`,
+        recipeGroups: `${BASE_RECIPES_PATH}/groups`
+    },
+    create: {
+        recipe: BASE_RECIPES_PATH,
+    },
+    update: {
+        recipe: (recipeId: string) => `${BASE_RECIPES_PATH}/${recipeId}`,
+        recipeIngredients: (recipeId: string) => `${BASE_RECIPES_PATH}/${recipeId}/ingredients`,
+        recipeGroups: (recipeId: string) => `${BASE_RECIPES_PATH}/${recipeId}/groups`
+    },
+    delete: {
+        recipe: (recipeId: string) => `${BASE_RECIPES_PATH}/${recipeId}`,
+    }
 };

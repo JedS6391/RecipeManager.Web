@@ -47,6 +47,17 @@ export class RecipesEffects {
     );
 
     @Effect()
+    public getRecipeGroups$ = this.actions$.pipe(
+        ofType<actions.GetRecipeGroups>(actions.GetRecipeGroups.TYPE),
+        switchMap(() => {
+            return this.recipeApiService.getRecipeGroups().pipe(
+                map(recipeGroups => new actions.GetRecipeGroupsSuccess(recipeGroups)),
+                catchError(error => of(new actions.GetRecipeGroupsFailure(error)))
+            );
+        })
+    );
+
+    @Effect()
     public createRecipe$ = this.actions$.pipe(
         ofType<actions.CreateRecipeAction>(actions.CreateRecipeAction.TYPE),
         switchMap(action => {
@@ -69,6 +80,12 @@ export class RecipesEffects {
                         action.ingredients,
                         r => new actions.UpdateRecipeSuccess(r),
                         e => new actions.UpdateRecipeFailure(e)
+                    ),
+                    new actions.UpdateRecipeGroupsAction(
+                        action.recipe,
+                        action.recipeGroups,
+                        r => new actions.UpdateRecipeSuccess(r),
+                        e => new actions.UpdateRecipeSuccess(e)
                     )
                 ]),
                 catchError(error => of(new actions.UpdateRecipeFailure(error)))
@@ -83,6 +100,20 @@ export class RecipesEffects {
             return this.recipeApiService.updateRecipeIngredients(
                 action.recipe.recipeId,
                 action.ingredients
+            ).pipe(
+                map(recipe => new actions.UpdateRecipeSuccess(recipe)),
+                catchError(error => of(new actions.UpdateRecipeFailure(error)))
+            );
+        })
+    );
+
+    @Effect()
+    public updateRecipeGroups$ = this.actions$.pipe(
+        ofType<actions.UpdateRecipeGroupsAction>(actions.UpdateRecipeGroupsAction.TYPE),
+        switchMap(action => {
+            return this.recipeApiService.updateRecipeGroups(
+                action.recipe.recipeId,
+                action.recipeGroups
             ).pipe(
                 map(recipe => new actions.UpdateRecipeSuccess(recipe)),
                 catchError(error => of(new actions.UpdateRecipeFailure(error)))
