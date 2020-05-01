@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeApiModule } from './api/recipe-api.module';
@@ -16,6 +21,8 @@ import { RecipesStoreModule } from './store/recipes-store.module';
 import { SpinnerModule } from '../shared/spinner/spinner.module';
 import { RecipeViewComponent } from './recipe-view/recipe-view.component';
 import { CartModule } from '../cart/cart.module';
+import { RecipeGroupsComponent } from './recipe-edit/recipe-groups/recipe-groups.component';
+import { RecipeListFiltersComponent } from './recipe-list/recipe-list-filters/recipe-list-filters.component';
 
 @NgModule({
   declarations: [
@@ -23,11 +30,14 @@ import { CartModule } from '../cart/cart.module';
     RecipeCreateComponent,
     RecipeEditComponent,
     RecipeIngredientsComponent,
-    RecipeViewComponent
+    RecipeViewComponent,
+    RecipeGroupsComponent,
+    RecipeListFiltersComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     ReactiveFormsModule,
     SpinnerModule,
     ProfileModule,
@@ -36,7 +46,12 @@ import { CartModule } from '../cart/cart.module';
     RecipesStoreModule,
     NgSelectModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatMenuModule
   ]
 })
 export class RecipesModule { }

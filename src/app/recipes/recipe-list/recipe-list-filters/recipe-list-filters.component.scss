@@ -1,0 +1,19 @@
+.search-box {
+    width: 100%;
+}
+
+.recipe-list-filters.collapsed {
+    display: none;
+}
+
+
+.ng-select.recipe-group-filter {
+    .ng-select-container {
+        border: solid #eee;
+        border-radius: 0;
+    }
+
+    .ng-dropdown-panel {
+        border-radius: 0;
+    }
+}

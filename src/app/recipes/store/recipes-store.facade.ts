@@ -4,11 +4,12 @@ import { Store, select } from '@ngrx/store';
 import * as selectors from './recipes-store.selectors';
 import * as actions from './recipes-store.actions';
 import { Observable } from 'rxjs';
-import { Recipe, IngredientCategory } from '../api/models/read/recipe.interface';
+import { Recipe, IngredientCategory, RecipeGroup } from '../api/models/read/recipe.interface';
 import { map } from 'rxjs/operators';
 import { UpdateRecipe } from '../api/models/write/update-recipe.interface';
 import { CreateIngredient } from '../api/models/write/create-ingredient.interface';
 import { CreateRecipe } from '../api/models/write/create-recipe.interface';
+import { UpdateRecipeGroups } from '../api/models/write/update-recipe-groups.interface';
 
 @Injectable()
 export class RecipesListFacade {
@@ -72,6 +73,10 @@ export class RecipesEditFacade {
         this.store.dispatch(new actions.GetIngredientCategories());
     }
 
+    public fetchRecipeGroups() {
+        this.store.dispatch(new actions.GetRecipeGroups());
+    }
+
     public getRecipe(): Observable<Recipe> {
         return this.store.pipe(
             select(selectors.recipeEditState),
@@ -86,8 +91,15 @@ export class RecipesEditFacade {
         );
     }
 
-    public updateRecipe(recipe: UpdateRecipe, ingredients: CreateIngredient[]) {
-        this.store.dispatch(new actions.UpdateRecipeAction(recipe, ingredients));
+    public getRecipeGroups(): Observable<RecipeGroup[]> {
+        return this.store.pipe(
+            select(selectors.recipeEditState),
+            map(s => s.recipeGroups)
+        );
+    }
+
+    public updateRecipe(recipe: UpdateRecipe, ingredients: CreateIngredient[], recipeGroups: UpdateRecipeGroups) {
+        this.store.dispatch(new actions.UpdateRecipeAction(recipe, ingredients, recipeGroups));
     }
 
     public isSaving(): Observable<boolean> {

@@ -9,7 +9,11 @@
         <app-spinner *ngIf="(isLoading$ | async)" [colour]="'#333'"></app-spinner>
         <div *ngIf="!(isLoading$ | async)">
             <div class="row">
-                <div class="10 col"></div>
+                <div class="10 col">
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let group of (recipe$ | async).groups">{{ group.name }}</mat-chip>
+                    </mat-chip-list>
+                </div>
                 <div class="1 col">
                     <a [routerLink]="['../edit/', recipeId]" class="btn primary"><i class="fas fa-pencil-alt"></i></a>
                 </div>
@@ -24,6 +28,7 @@
                 </div>
             </div>
             <div class="row card">
+                <p>Ingredients</p>
                 <table class="w-100">
                     <thead>
                         <tr>

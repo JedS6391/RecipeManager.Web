@@ -15,7 +15,8 @@ export const RECIPES_INITIAL_STATE: RecipeState = {
             id: '',
             name: '',
             ingredients: [],
-            instructions: []
+            instructions: [],
+            groups: []
         }
     },
     edit: {
@@ -26,9 +27,11 @@ export const RECIPES_INITIAL_STATE: RecipeState = {
             id: '',
             name: '',
             ingredients: [],
-            instructions: []
+            instructions: [],
+            groups: []
         },
-        ingredientCategories: []
+        ingredientCategories: [],
+        recipeGroups: []
     }
 };
 
@@ -40,6 +43,8 @@ const handlerMap: ActionHandlerMap<RecipeState> = {
     [actions.GetRecipeSuccess.TYPE]: getRecipeSuccessHandler,
     [actions.GetIngredientCategories.TYPE]: getIngredientCategoriesHandler,
     [actions.GetIngredientCategoriesSuccess.TYPE]: getIngredientCategoriesSuccessHandler,
+    [actions.GetRecipeGroups.TYPE]: getRecipeGroupsHandler,
+    [actions.GetRecipeGroupsSuccess.TYPE]: getRecipeGroupsSuccessHandler,
     [actions.CreateRecipeAction.TYPE]: createRecipeHandler,
     [actions.CreateRecipeSuccess.TYPE]: createRecipeSuccessHandler,
     [actions.UpdateRecipeAction.TYPE]: updateRecipeHandler,
@@ -83,7 +88,8 @@ function getRecipeHandler(state: RecipeState): RecipeState {
             isSaving: false,
             saveSuccessful: false,
             recipe: state.edit.recipe,
-            ingredientCategories: state.edit.ingredientCategories
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: state.edit.recipeGroups
         }
     };
 }
@@ -97,7 +103,8 @@ function getRecipeSuccessHandler(state: RecipeState, action: actions.GetRecipeSu
             isSaving: false,
             saveSuccessful: false,
             recipe: action.recipe,
-            ingredientCategories: state.edit.ingredientCategories
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: state.edit.recipeGroups
         }
     };
 }
@@ -111,7 +118,8 @@ function getIngredientCategoriesHandler(state: RecipeState): RecipeState {
             isSaving: false,
             saveSuccessful: false,
             recipe: state.edit.recipe,
-            ingredientCategories: state.edit.ingredientCategories
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: state.edit.recipeGroups
         }
     };
 }
@@ -125,7 +133,38 @@ function getIngredientCategoriesSuccessHandler(state: RecipeState, action: actio
             isSaving: false,
             saveSuccessful: false,
             recipe: state.edit.recipe,
-            ingredientCategories: action.ingredientCategories
+            ingredientCategories: action.ingredientCategories,
+            recipeGroups: state.edit.recipeGroups
+        }
+    };
+}
+
+function getRecipeGroupsHandler(state: RecipeState): RecipeState {
+    return {
+        list: state.list,
+        create: state.create,
+        edit: {
+            isLoading: true,
+            isSaving: false,
+            saveSuccessful: false,
+            recipe: state.edit.recipe,
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: state.edit.recipeGroups
+        }
+    };
+}
+
+function getRecipeGroupsSuccessHandler(state: RecipeState, action: actions.GetRecipeGroupsSuccess): RecipeState {
+    return {
+        list: state.list,
+        create: state.create,
+        edit: {
+            isLoading: false,
+            isSaving: false,
+            saveSuccessful: false,
+            recipe: state.edit.recipe,
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: action.recipeGroups
         }
     };
 }
@@ -163,7 +202,8 @@ function updateRecipeHandler(state: RecipeState): RecipeState {
             isSaving: true,
             saveSuccessful: false,
             recipe: state.edit.recipe,
-            ingredientCategories: state.edit.ingredientCategories
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: state.edit.recipeGroups
         }
     };
 }
@@ -177,7 +217,8 @@ function updateRecipeSuccessHandler(state: RecipeState, action: actions.UpdateRe
             isSaving: false,
             saveSuccessful: true,
             recipe: action.recipe,
-            ingredientCategories: state.edit.ingredientCategories
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: state.edit.recipeGroups
         }
     };
 }

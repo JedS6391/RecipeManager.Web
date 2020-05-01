@@ -9,15 +9,3 @@ input.ng-invalid {
 ng-select.ng-invalid {
     border: 1px solid red;
 }
-
-.ng-select {
-    .ng-select-container {
-        padding: 1.1em;
-        border: solid #eee;
-        border-radius: 0;
-    }
-
-    .ng-dropdown-panel {
-        border-radius: 0;
-    }
-  }

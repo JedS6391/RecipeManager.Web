@@ -21,9 +21,16 @@
             </div>
         </div>
         <div class="row">
+          <app-recipe-groups
+            [recipe]="recipe$ | async"
+            [form]="form">
+          </app-recipe-groups>
+        </div>
+        <div class="row">
             <app-recipe-ingredients
                 [recipe]="recipe$ | async"
-                [form]="form"></app-recipe-ingredients>
+                [form]="form">
+            </app-recipe-ingredients>
         </div>
       </form>
     </div>

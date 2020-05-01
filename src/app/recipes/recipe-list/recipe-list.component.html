@@ -5,30 +5,103 @@
     <app-spinner *ngIf="isLoading$ | async" [colour]="'#333'"></app-spinner>
     <div *ngIf="!(isLoading$ | async)">
       <div class="row">
-          <div class="11 col"></div>
+          <div class="10 col">
+            <button [matMenuTriggerFor]="menu" class="btn primary list-filter-option"><i class="fas fa-list"></i></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="changeRecipeListViewMode('name')">Order by name</button>
+                <button mat-menu-item (click)="changeRecipeListViewMode('recipeGroup')">Group by recipe group</button>
+            </mat-menu>
+            <button (click)="toggleFilters()" class="btn primary list-filter-option"><i class="fas fa-filter"></i></button>
+          </div>
           <div class="1 col">
             <a [routerLink]="['new']" class="btn primary new-button"><i class="fas fa-plus"></i></a>
           </div>
       </div>
 
-      <table class="w-100" *ngIf="!(isLoading$ | async)">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th></th>    
-                <th></th>    
-                <th></th>      
+      <app-recipe-list-filters
+        [collapsed]="filtersCollapsed"
+        (searchTermChange)="onSearchTermChange($event)"
+        (selectedRecipeGroupsChange)="onSelectedRecipeGroupsChange($event)"
+      ></app-recipe-list-filters>
+
+      <div [ngSwitch]="viewMode">
+        <div *ngSwitchCase="'name'">
+          <ng-container *ngTemplateOutlet="nameViewMode"></ng-container>
+        </div>
+        <div *ngSwitchCase="'recipeGroup'">
+          <ng-container *ngTemplateOutlet="recipeGroupViewMode"></ng-container>
+        </div>
+      </div>
+
+      <ng-template #nameViewMode>
+        <table class="w-100" *ngIf="!(isLoading$ | async) && (recipes$ | async)?.length > 0" cellspacing="0">
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th></th>    
+                  <th></th>    
+                  <th></th>      
+              </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let recipe of recipes$ | async" class="recipe-list-row">
+              <td class="10 col">
+                <a [routerLink]="[recipe.id]">{{ recipe.name }}</a>
+                <mat-chip-list>
+                  <mat-chip *ngFor="let group of recipe.groups">{{ group.name }}</mat-chip>
+                </mat-chip-list>
+              </td>
+              <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn"><i class="fas fa-pencil-alt"></i></a></td>
+              <td class="1 col"><a (click)="addRecipeToCart(recipe)" class="btn" ><i class="fas fa-cart-plus"></i></a></td>
+              <td class="1 col"><a (click)="deleteRecipe(recipe)" class="btn" ><i class="fas fa-trash-alt"></i></a></td>
             </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let recipe of recipes$ | async">
-            <td class="10 col"><a [routerLink]="[recipe.id]">{{ recipe.name }}</a></td>
-            <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn"><i class="fas fa-pencil-alt"></i></a></td>
-            <td class="1 col"><a (click)="addRecipeToCart(recipe)" class="btn" ><i class="fas fa-cart-plus"></i></a></td>
-            <td class="1 col"><a (click)="deleteRecipe(recipe)" class="btn" ><i class="fas fa-trash-alt"></i></a></td>
-          </tr>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+        <div *ngIf="!(isLoading$ | async) && (recipes$ | async)?.length === 0">
+          <ng-container *ngTemplateOutlet="noRecipesFound"></ng-container>
+        </div>
+      </ng-template>
+
+      <ng-template #recipeGroupViewMode>
+        <table class="w-100" *ngIf="!(isLoading$ | async)" cellspacing="0">
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th></th>    
+                  <th></th>    
+                  <th></th>      
+              </tr>
+          </thead>
+          <tbody *ngFor="let group of (recipesByGroup$ | async) | keyvalue">
+            <tr *ngIf="group.value.length > 0" class="recipe-group-separator">
+              <td class="10 col"><b>{{ group.key.name }}</b></td>
+              <td class="1 col"></td>
+              <td class="1 col"></td>
+              <td class="1 col"></td>
+            </tr>
+            <tr *ngFor="let recipe of group.value" class="recipe-list-row">
+              <td class="10 col">
+                <a [routerLink]="[recipe.id]">{{ recipe.name }}</a>
+                <mat-chip-list>
+                  <mat-chip *ngFor="let group of recipe.groups">{{ group.name }}</mat-chip>
+                </mat-chip-list>
+              </td>
+              <td class="1 col"><a [routerLink]="['edit', recipe.id]" class="btn"><i class="fas fa-pencil-alt"></i></a></td>
+              <td class="1 col"><a (click)="addRecipeToCart(recipe)" class="btn" ><i class="fas fa-cart-plus"></i></a></td>
+              <td class="1 col"><a (click)="deleteRecipe(recipe)" class="btn" ><i class="fas fa-trash-alt"></i></a></td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="!(isLoading$ | async) && (recipes$ | async)?.length === 0">
+          <ng-container *ngTemplateOutlet="noRecipesFound"></ng-container>
+        </div>
+      </ng-template>
+
+      <ng-template #noRecipesFound>
+        <div class="row" style="text-align: center;">
+          <b>No recipes found</b>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

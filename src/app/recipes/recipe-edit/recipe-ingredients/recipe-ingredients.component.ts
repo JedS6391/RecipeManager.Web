@@ -34,9 +34,7 @@ export class RecipeIngredientsComponent implements OnInit {
   }
 
   public addIngredient(): void {
-    const ingredients = this.form.get('ingredients') as FormArray;
-
-    ingredients.push(this.fb.group({
+    this.ingredients.push(this.fb.group({
         name: ['', Validators.required],
         amount: ['', Validators.required],
         category: ['', Validators.required]
@@ -44,9 +42,7 @@ export class RecipeIngredientsComponent implements OnInit {
   }
 
   public deleteIngredient(ingredientIndex: number): void {
-    const ingredients = this.form.get('ingredients') as FormArray;
-
-    ingredients.removeAt(ingredientIndex);
+    this.ingredients.removeAt(ingredientIndex);
   }
 
   public addTag(tag: string) {

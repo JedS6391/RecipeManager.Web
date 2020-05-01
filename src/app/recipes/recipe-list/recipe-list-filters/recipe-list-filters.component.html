@@ -1,0 +1,17 @@
+<div class="row recipe-list-filters" [ngClass]="{ collapsed: collapsed }">
+    <b>Add your filters below:</b>
+
+    <input (input)="onSearchTermChanged($event.target.value)" class="card search-box" id="search" type="text" placeholder="Name">
+    
+    <ng-select
+      class="recipe-group-filter"
+      [items]="allRecipeGroups$ | async"
+      [multiple]="true"
+      [closeOnSelect]="false"
+      [searchable]="true"
+      [(ngModel)]="selectedRecipeGroups"
+      (ngModelChange)="onSelectedRecipeGroupsChanged($event)"
+      bindLabel="name"
+      placeholder="Recipe groups">
+    </ng-select>      
+  </div>
