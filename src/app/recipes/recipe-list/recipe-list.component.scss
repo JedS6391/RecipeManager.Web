@@ -4,3 +4,21 @@
     padding-right: 3em;
     margin-right: 4em;
 }
+
+.recipe-group-separator {
+    background-color: #e0e0e0;
+    line-height: 0;
+}
+
+.recipe-list-row:hover {
+    background-color: #eee;
+}
+
+.recipe-group-separator > td {
+    border-bottom: solid #e0e0e0;
+    border-top: solid #e0e0e0;
+}
+
+.list-filter-option {
+    margin-left: 10px;
+}

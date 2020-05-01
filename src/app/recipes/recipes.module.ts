@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -22,6 +22,7 @@ import { SpinnerModule } from '../shared/spinner/spinner.module';
 import { RecipeViewComponent } from './recipe-view/recipe-view.component';
 import { CartModule } from '../cart/cart.module';
 import { RecipeGroupsComponent } from './recipe-edit/recipe-groups/recipe-groups.component';
+import { RecipeListFiltersComponent } from './recipe-list/recipe-list-filters/recipe-list-filters.component';
 
 @NgModule({
   declarations: [
@@ -30,11 +31,13 @@ import { RecipeGroupsComponent } from './recipe-edit/recipe-groups/recipe-groups
     RecipeEditComponent,
     RecipeIngredientsComponent,
     RecipeViewComponent,
-    RecipeGroupsComponent
+    RecipeGroupsComponent,
+    RecipeListFiltersComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     ReactiveFormsModule,
     SpinnerModule,
     ProfileModule,

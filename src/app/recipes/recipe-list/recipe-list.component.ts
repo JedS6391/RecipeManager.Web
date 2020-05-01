@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, take } from 'rxjs/operators';
+import { filter, take, map, debounceTime } from 'rxjs/operators';
 
-import { Recipe } from '../api/models/read/recipe.interface';
+import { Recipe, RecipeGroup } from '../api/models/read/recipe.interface';
 import { RecipesListFacade } from '../store/recipes-store.facade';
 import {
   AddRecipeToCartComponent,
@@ -13,6 +13,13 @@ import {
 import { CartService } from 'src/app/cart/service/cart.service';
 import { MessagingService } from 'src/app/shared/messaging.service';
 
+type RecipeListViewMode = 'name' | 'recipeGroup';
+
+const DEFAULT_RECIPE_GROUP: RecipeGroup = {
+  id: 'default-recipe-group',
+  name: ''
+};
+
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
@@ -21,6 +28,14 @@ import { MessagingService } from 'src/app/shared/messaging.service';
 export class RecipeListComponent implements OnInit {
     public isLoading$: Observable<boolean>;
     public recipes$: Observable<Recipe[]>;
+    public recipesByGroup$: Observable<Map<RecipeGroup, Recipe[]>>;
+
+    public filtersCollapsed = true;
+    public viewMode: RecipeListViewMode = 'name';
+
+    private allRecipes$: Observable<Recipe[]>;
+    private searchTerm$ = new BehaviorSubject<string>('');
+    private selectedRecipeGroups$ = new BehaviorSubject<RecipeGroup[]>([]);
 
     constructor(
       private recipesListFacade: RecipesListFacade,
@@ -33,7 +48,55 @@ export class RecipeListComponent implements OnInit {
         this.recipesListFacade.fetchAllRecipes();
 
         this.isLoading$ = this.recipesListFacade.isLoading();
-        this.recipes$ = this.recipesListFacade.getAllRecipes();
+        this.allRecipes$ = this.recipesListFacade.getAllRecipes();
+
+        // Recipe list can be filtered by the search term
+        this.recipes$ = combineLatest(
+          this.allRecipes$,
+          this.searchTerm$.pipe(
+            debounceTime(500)
+          ),
+          this.selectedRecipeGroups$.pipe(
+            debounceTime(500)
+          )
+        ).pipe(
+          map(([allRecipes, searchTerm, selectedRecipeGroups]) => {
+            const selectedRecipeGroupIds = new Set<string>(selectedRecipeGroups.map(recipeGroup => recipeGroup.id));
+
+            return allRecipes.filter(recipe =>
+              recipe.name.toLowerCase().includes(searchTerm) &&
+              (selectedRecipeGroups.length === 0 || recipe.groups.some(recipeGroup => selectedRecipeGroupIds.has(recipeGroup.id)))
+            );
+          })
+        );
+
+        this.recipesByGroup$ = this.recipes$.pipe(
+          map(recipes => {
+            const recipesByGroup = new Map<RecipeGroup, Recipe[]>();
+
+            // Add a placeholder group for any recipes that have no groups.
+            recipesByGroup.set(DEFAULT_RECIPE_GROUP, []);
+
+            recipes.forEach(recipe => {
+              // Because a recipe may have multiple groups, it may be present multiple times.
+              if (recipe.groups.length === 0) {
+                recipesByGroup.get(DEFAULT_RECIPE_GROUP).push(recipe);
+              } else {
+                recipe.groups.forEach(group => {
+                  if (recipesByGroup.has(group)) {
+                    recipesByGroup.get(group).push(recipe);
+                  } else {
+                    recipesByGroup.set(group, [recipe]);
+                  }
+                });
+              }
+            });
+
+            return recipesByGroup;
+          })
+        );
+
+        this.recipesByGroup$.subscribe();
     }
 
     public addRecipeToCart(recipe: Recipe) {
@@ -79,7 +142,19 @@ export class RecipeListComponent implements OnInit {
       });
     }
 
-    public changeRecipeListGroupingMode(groupingMode: string) {
-      console.log(groupingMode);
+    public changeRecipeListViewMode(viewMode: RecipeListViewMode) {
+      this.viewMode = viewMode;
+    }
+
+    public onSearchTermChange(searchTerm: string) {
+      this.searchTerm$.next(searchTerm);
+    }
+
+    public onSelectedRecipeGroupsChange(selectedRecipeGroups: RecipeGroup[]) {
+      this.selectedRecipeGroups$.next(selectedRecipeGroups);
+    }
+
+    public toggleFilters() {
+      this.filtersCollapsed = !this.filtersCollapsed;
     }
 }
