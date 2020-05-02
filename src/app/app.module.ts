@@ -14,7 +14,6 @@ import { RECIPES_BASE_URL_TOKEN } from './recipes/api/recipe-api.service';
 import { environment } from 'src/environments/environment';
 import { HomeModule } from './home/home.module';
 import { ProfileModule } from './profile/profile.module';
-import { SpinnerModule } from './shared/spinner/spinner.module';
 import { CartModule } from './cart/cart.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CART_BASE_URL_TOKEN } from './cart/api/cart-api.service';

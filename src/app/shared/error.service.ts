@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as Sentry from '@sentry/browser';
 
 import { MessagingService } from './messaging.service';
 import { Observable } from 'rxjs';
@@ -19,7 +20,7 @@ export class ErrorService {
         errorStream.pipe(
             // Cater for if multiple errors come through at once.
             filter(error => error !== null && error !== undefined),
-            debounceTime(1000)
+            debounceTime(2000)
         ).subscribe(error => this.handleError(error));
     }
 
@@ -27,6 +28,16 @@ export class ErrorService {
         console.log('Encountered unexpected error.');
         console.log(error);
 
-        this.messagingService.showMessage('Unexpected error encountered.', { duration: 5000 });
+        const eventId = Sentry.captureException(error);
+
+        this.messagingService.showMessageWithAction(
+            'Unexpected error encountered.',
+            'Report issue',
+            () => {
+                Sentry.showReportDialog({ eventId });
+            },
+            {
+                duration: 10000
+            });
     }
 }

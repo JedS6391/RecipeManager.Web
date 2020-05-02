@@ -6,6 +6,7 @@ export let APP_CONFIGURATION = new InjectionToken<AppConfiguration>('app.config'
 
 export class AppConfiguration {
     authentication: AuthenticationConfiguration;
+    monitoring: MonitoringConfiguration;
 }
 
 export class AuthenticationConfiguration {
@@ -14,11 +15,18 @@ export class AuthenticationConfiguration {
     auth0Audience: string;
 }
 
+export class MonitoringConfiguration {
+    sentryDsn: string;
+}
+
 export const DEFAULT_APP_CONFIG: AppConfiguration = {
     authentication: {
         auth0Domain: environment.auth0Domain,
         auth0ClientId: environment.auth0ClientId,
         auth0Audience: environment.auth0Audience
+    },
+    monitoring: {
+        sentryDsn: environment.sentryDsn
     }
 };
 
