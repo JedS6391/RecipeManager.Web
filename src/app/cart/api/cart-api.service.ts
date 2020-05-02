@@ -7,8 +7,6 @@ import { BaseApiService } from '../../shared/base-api.service';
 import { Cart } from './models/read/cart.interface';
 import { CART_URLS } from './cart.urls';
 import { CartItemUpdate } from './models/write/update-cart-items';
-import { TokenStoreService } from 'src/app/authentication/token-store.service';
-
 export const CART_BASE_URL_TOKEN = new InjectionToken<string>('CartApiBaseUrl');
 
 @Injectable()
@@ -16,16 +14,15 @@ export class CartApiService extends BaseApiService {
 
     constructor(
         @Inject(CART_BASE_URL_TOKEN) baseUrl: string,
-        http: HttpClient,
-        tokenStoreService: TokenStoreService
+        http: HttpClient
     ) {
-        super(baseUrl, http, tokenStoreService);
+        super(baseUrl, http);
     }
 
     public getCurrentCart(): Observable<Cart> {
         const url = `${this.baseUrl}${CART_URLS.getCurrentCart}`;
 
-        return this.http.get<Cart>(url, { headers: this.getHeaders() }).pipe(
+        return this.http.get<Cart>(url).pipe(
             publishLast(),
             refCount()
         );
@@ -34,7 +31,7 @@ export class CartApiService extends BaseApiService {
     public updateCartItems(cartItemUpdates: CartItemUpdate[]): Observable<Cart> {
         const url = `${this.baseUrl}${CART_URLS.updateCurrentCartItems}`;
 
-        return this.http.put<Cart>(url, cartItemUpdates, { headers: this.getHeaders() }).pipe(
+        return this.http.put<Cart>(url, cartItemUpdates).pipe(
             publishLast(),
             refCount()
         );

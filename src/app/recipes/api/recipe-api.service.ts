@@ -9,7 +9,6 @@ import { CreateRecipe } from './models/write/create-recipe.interface';
 import { CreateIngredient } from './models/write/create-ingredient.interface';
 import { UpdateRecipe } from './models/write/update-recipe.interface';
 import { BaseApiService } from '../../shared/base-api.service';
-import { TokenStoreService } from 'src/app/authentication/token-store.service';
 import { UpdateRecipeGroups } from './models/write/update-recipe-groups.interface';
 
 export const RECIPES_BASE_URL_TOKEN = new InjectionToken<string>('RecipeApiBaseUrl');
@@ -18,16 +17,15 @@ export const RECIPES_BASE_URL_TOKEN = new InjectionToken<string>('RecipeApiBaseU
 export class RecipeApiService extends BaseApiService {
     constructor(
         @Inject(RECIPES_BASE_URL_TOKEN) baseUrl: string,
-        http: HttpClient,
-        tokenStoreService: TokenStoreService
+        http: HttpClient
     ) {
-        super(baseUrl, http, tokenStoreService);
+        super(baseUrl, http);
     }
 
     public getRecipes(): Observable<Recipe[]> {
         const url = `${this.baseUrl}${RECIPE_URLS.get.allRecipes}`;
 
-        return this.http.get<Recipe[]>(url, { headers: this.getHeaders() }).pipe(
+        return this.http.get<Recipe[]>(url).pipe(
             publishLast(),
             refCount()
         );
@@ -36,7 +34,7 @@ export class RecipeApiService extends BaseApiService {
     public getRecipe(recipeId: string): Observable<Recipe> {
         const url = `${this.baseUrl}${RECIPE_URLS.get.recipeById(recipeId)}`;
 
-        return this.http.get<Recipe>(url, { headers: this.getHeaders() }).pipe(
+        return this.http.get<Recipe>(url).pipe(
             publishLast(),
             refCount()
         );
@@ -45,7 +43,7 @@ export class RecipeApiService extends BaseApiService {
     public getIngredientCategories(): Observable<IngredientCategory[]> {
         const url = `${this.baseUrl}${RECIPE_URLS.get.ingredientCategories}`;
 
-        return this.http.get<IngredientCategory[]>(url, { headers: this.getHeaders() }).pipe(
+        return this.http.get<IngredientCategory[]>(url).pipe(
             publishLast(),
             refCount()
         );
@@ -54,7 +52,7 @@ export class RecipeApiService extends BaseApiService {
     public getRecipeGroups(): Observable<RecipeGroup[]> {
         const url = `${this.baseUrl}${RECIPE_URLS.get.recipeGroups}`;
 
-        return this.http.get<RecipeGroup[]>(url, { headers: this.getHeaders() }).pipe(
+        return this.http.get<RecipeGroup[]>(url).pipe(
             publishLast(),
             refCount()
         );
@@ -63,7 +61,7 @@ export class RecipeApiService extends BaseApiService {
     public createRecipe(recipe: CreateRecipe): Observable<Recipe> {
         const url = `${this.baseUrl}${RECIPE_URLS.create.recipe}`;
 
-        return this.http.post<CreateRecipe>(url, recipe, {headers: this.getHeaders()}).pipe(
+        return this.http.post<CreateRecipe>(url, recipe).pipe(
             publishLast(),
             refCount()
         );
@@ -72,7 +70,7 @@ export class RecipeApiService extends BaseApiService {
     public updateRecipe(recipe: UpdateRecipe): Observable<Recipe> {
         const url = `${this.baseUrl}${RECIPE_URLS.update.recipe(recipe.recipeId)}`;
 
-        return this.http.put<UpdateRecipe>(url, recipe, {headers: this.getHeaders()}).pipe(
+        return this.http.put<UpdateRecipe>(url, recipe).pipe(
             publishLast(),
             refCount()
         );
@@ -81,7 +79,7 @@ export class RecipeApiService extends BaseApiService {
     public updateRecipeIngredients(recipeId: string, ingredients: CreateIngredient[]): Observable<Recipe> {
         const url = `${this.baseUrl}${RECIPE_URLS.update.recipeIngredients(recipeId)}`;
 
-        return this.http.put<CreateIngredient[]>(url, ingredients, {headers: this.getHeaders()}).pipe(
+        return this.http.put<CreateIngredient[]>(url, ingredients).pipe(
             publishLast(),
             refCount()
         );
@@ -90,7 +88,7 @@ export class RecipeApiService extends BaseApiService {
     public updateRecipeGroups(recipeId: string, recipeGroups: UpdateRecipeGroups): Observable<Recipe> {
         const url = `${this.baseUrl}${RECIPE_URLS.update.recipeGroups(recipeId)}`;
 
-        return this.http.put<UpdateRecipeGroups>(url, recipeGroups, {headers: this.getHeaders()}).pipe(
+        return this.http.put<UpdateRecipeGroups>(url, recipeGroups).pipe(
             publishLast(),
             refCount()
         );
@@ -99,7 +97,7 @@ export class RecipeApiService extends BaseApiService {
     public deleteRecipe(recipeId: string): Observable<void> {
         const url = `${this.baseUrl}${RECIPE_URLS.delete.recipe(recipeId)}`;
 
-        return this.http.delete(url, {headers: this.getHeaders()}).pipe(
+        return this.http.delete(url).pipe(
             publishLast(),
             refCount()
         );
