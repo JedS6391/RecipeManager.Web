@@ -32,19 +32,23 @@ export const RECIPES_INITIAL_STATE: RecipeState = {
         },
         ingredientCategories: [],
         recipeGroups: []
-    }
+    },
+    error: null
 };
 
-// TODO: Failure reducers
 const handlerMap: ActionHandlerMap<RecipeState> = {
     [actions.GetAllRecipes.TYPE]: getAllRecipesHandler,
     [actions.GetAllRecipesSuccess.TYPE]: getAllRecipesSuccessHandler,
+    [actions.GetAllRecipesFailure.TYPE]: getAllRecipesFailureHandler,
     [actions.GetRecipe.TYPE]: getRecipeHandler,
     [actions.GetRecipeSuccess.TYPE]: getRecipeSuccessHandler,
+    [actions.GetRecipeFailure.TYPE]: getRecipeFailureHandler,
     [actions.GetIngredientCategories.TYPE]: getIngredientCategoriesHandler,
     [actions.GetIngredientCategoriesSuccess.TYPE]: getIngredientCategoriesSuccessHandler,
+    [actions.GetIngredientCategoriesFailure.TYPE]: getIngredientCategoriesFailureHandler,
     [actions.GetRecipeGroups.TYPE]: getRecipeGroupsHandler,
     [actions.GetRecipeGroupsSuccess.TYPE]: getRecipeGroupsSuccessHandler,
+    [actions.GetRecipeGroupsFailure.TYPE]: getRecipeGroupsFailureHandler,
     [actions.CreateRecipeAction.TYPE]: createRecipeHandler,
     [actions.CreateRecipeSuccess.TYPE]: createRecipeSuccessHandler,
     [actions.UpdateRecipeAction.TYPE]: updateRecipeHandler,
@@ -64,7 +68,8 @@ function getAllRecipesHandler(state: RecipeState): RecipeState {
             recipes: state.list.recipes
         },
         create: state.create,
-        edit: state.edit
+        edit: state.edit,
+        error: null
     };
 }
 
@@ -76,6 +81,19 @@ function getAllRecipesSuccessHandler(state: RecipeState, action: actions.GetAllR
         },
         create: state.create,
         edit: state.edit,
+        error: null
+    };
+}
+
+function getAllRecipesFailureHandler(state: RecipeState, action: actions.GetAllRecipesFailure): RecipeState {
+    return {
+        list: {
+            isLoading: false,
+            recipes: []
+        },
+        create: state.create,
+        edit: state.edit,
+        error: action.error
     };
 }
 
@@ -90,7 +108,8 @@ function getRecipeHandler(state: RecipeState): RecipeState {
             recipe: state.edit.recipe,
             ingredientCategories: state.edit.ingredientCategories,
             recipeGroups: state.edit.recipeGroups
-        }
+        },
+        error: null
     };
 }
 
@@ -105,7 +124,24 @@ function getRecipeSuccessHandler(state: RecipeState, action: actions.GetRecipeSu
             recipe: action.recipe,
             ingredientCategories: state.edit.ingredientCategories,
             recipeGroups: state.edit.recipeGroups
-        }
+        },
+        error: null
+    };
+}
+
+function getRecipeFailureHandler(state: RecipeState, action: actions.GetRecipeFailure): RecipeState {
+    return {
+        list: state.list,
+        create: state.create,
+        edit: {
+            isLoading: false,
+            isSaving: false,
+            saveSuccessful: false,
+            recipe: null,
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: state.edit.recipeGroups
+        },
+        error: action.error
     };
 }
 
@@ -120,7 +156,8 @@ function getIngredientCategoriesHandler(state: RecipeState): RecipeState {
             recipe: state.edit.recipe,
             ingredientCategories: state.edit.ingredientCategories,
             recipeGroups: state.edit.recipeGroups
-        }
+        },
+        error: null
     };
 }
 
@@ -135,7 +172,24 @@ function getIngredientCategoriesSuccessHandler(state: RecipeState, action: actio
             recipe: state.edit.recipe,
             ingredientCategories: action.ingredientCategories,
             recipeGroups: state.edit.recipeGroups
-        }
+        },
+        error: null
+    };
+}
+
+function getIngredientCategoriesFailureHandler(state: RecipeState, action: actions.GetIngredientCategoriesFailure): RecipeState {
+    return {
+        list: state.list,
+        create: state.create,
+        edit: {
+            isLoading: false,
+            isSaving: false,
+            saveSuccessful: false,
+            recipe: state.edit.recipe,
+            ingredientCategories: [],
+            recipeGroups: state.edit.recipeGroups
+        },
+        error: action.error
     };
 }
 
@@ -150,7 +204,8 @@ function getRecipeGroupsHandler(state: RecipeState): RecipeState {
             recipe: state.edit.recipe,
             ingredientCategories: state.edit.ingredientCategories,
             recipeGroups: state.edit.recipeGroups
-        }
+        },
+        error: null
     };
 }
 
@@ -165,7 +220,24 @@ function getRecipeGroupsSuccessHandler(state: RecipeState, action: actions.GetRe
             recipe: state.edit.recipe,
             ingredientCategories: state.edit.ingredientCategories,
             recipeGroups: action.recipeGroups
-        }
+        },
+        error: null
+    };
+}
+
+function getRecipeGroupsFailureHandler(state: RecipeState, action: actions.GetRecipeGroupsFailure): RecipeState {
+    return {
+        list: state.list,
+        create: state.create,
+        edit: {
+            isLoading: false,
+            isSaving: false,
+            saveSuccessful: false,
+            recipe: state.edit.recipe,
+            ingredientCategories: state.edit.ingredientCategories,
+            recipeGroups: []
+        },
+        error: action.error
     };
 }
 

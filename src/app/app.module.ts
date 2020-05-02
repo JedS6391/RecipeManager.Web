@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -19,6 +19,7 @@ import { CartModule } from './cart/cart.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CART_BASE_URL_TOKEN } from './cart/api/cart-api.service';
 import { MessagingService } from './shared/messaging.service';
+import { ErrorService } from './shared/error.service';
 
 function logger(reducer: any): any {
   return storeLogger()(reducer);
@@ -53,7 +54,8 @@ const metaReducers = !environment.production ? [logger] : [];
       provide: CART_BASE_URL_TOKEN,
       useValue: environment.baseUrl
     },
-    MessagingService
+    MessagingService,
+    ErrorService
   ],
   bootstrap: [AppComponent]
 })
