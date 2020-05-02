@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationGuard } from './authentication.guard';
 import { TokenStoreService } from './token-store.service';
+import { TokenInterceptor } from './token.interceptor';
 
 @NgModule({
   declarations: [],
@@ -12,7 +15,12 @@ import { TokenStoreService } from './token-store.service';
   providers: [
     AuthenticationService,
     AuthenticationGuard,
-    TokenStoreService
+    TokenStoreService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
   ]
 })
 export class AuthenticationModule { }
