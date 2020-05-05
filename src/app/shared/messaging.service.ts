@@ -14,4 +14,12 @@ export class MessagingService {
             duration: options.duration
         });
     }
+
+    public showMessageWithAction(message: string, actionLabel: string, action: () => void, options: MessageOptions) {
+        const snackBarRef = this.snackBar.open(message, actionLabel, {
+            duration: options.duration
+        });
+
+        snackBarRef.onAction().subscribe(() => action());
+    }
 }

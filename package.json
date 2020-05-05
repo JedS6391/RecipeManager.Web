@@ -28,6 +28,7 @@
     "@ng-select/ng-select": "^3.7.3",
     "@ngrx/effects": "^9.1.0",
     "@ngrx/store": "^9.1.0",
+    "@sentry/browser": "^5.15.5",
     "express": "^4.17.1",
     "ngrx": "0.0.1-security",
     "ngrx-store-logger": "^0.2.4",

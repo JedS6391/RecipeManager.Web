@@ -20,4 +20,5 @@ export interface RecipeState {
         ingredientCategories: IngredientCategory[];
         recipeGroups: RecipeGroup[];
     };
+    error?: Error;
 }
