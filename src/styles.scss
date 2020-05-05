@@ -26,25 +26,5 @@ $RecipeManager-theme: mat-light-theme($RecipeManager-primary, $RecipeManager-acc
 // that you are using.
 @include angular-material-theme($RecipeManager-theme);
 
-.header {
-    background-color: black;
-    max-width: 100%;
-    margin-top: -0.5em;
-    color: white;
-    text-transform: uppercase;
-}
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
+@import "main.scss";
 @import "~@ng-select/ng-select/themes/default.theme.css";
-
-.ng-select {
-    .ng-select-container {
-        border: solid #eee;
-        border-radius: 0;
-    }
-
-    .ng-dropdown-panel {
-        border-radius: 0;
-    }
-  }

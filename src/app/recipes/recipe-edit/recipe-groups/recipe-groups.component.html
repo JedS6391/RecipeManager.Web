@@ -1,7 +1,7 @@
 <div class="card" [formGroup]="form">
     Groups
-    <mat-form-field class="w-100">
-      <mat-chip-list #groupChipList formArrayName="groups"> 
+    <mat-form-field class="w-100 group-list-form">
+      <mat-chip-list class="group-list" #groupChipList formArrayName="groups"> 
         <mat-chip               
             *ngFor="let group of groups.controls; let groupIndex = index;" 
             [formGroupName]="groupIndex"
