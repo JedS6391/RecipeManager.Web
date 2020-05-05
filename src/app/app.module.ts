@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -15,7 +16,6 @@ import { environment } from 'src/environments/environment';
 import { HomeModule } from './home/home.module';
 import { ProfileModule } from './profile/profile.module';
 import { CartModule } from './cart/cart.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CART_BASE_URL_TOKEN } from './cart/api/cart-api.service';
 import { MessagingService } from './shared/messaging.service';
 import { ErrorService } from './shared/error.service';
@@ -32,6 +32,7 @@ const metaReducers = !environment.production ? [logger] : [];
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     StoreModule.forRoot({}, { metaReducers }),
     EffectsModule.forRoot([]),
@@ -41,8 +42,7 @@ const metaReducers = !environment.production ? [logger] : [];
     HomeModule,
     ProfileModule,
     RecipesModule,
-    CartModule,
-    BrowserAnimationsModule
+    CartModule
   ],
   providers: [
     {

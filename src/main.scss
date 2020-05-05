@@ -1,0 +1,151 @@
+$background: #202b38;
+$background-alt: #161f27;
+$text-main: #dbdbdb;
+$highlight: #0096bfab;
+$highlight-alt: #fa0;
+
+body {
+	background-color: $background;
+	color: $text-main;
+}
+
+.header {
+    background-color: $background-alt;
+    max-width: 100% !important;
+    margin-top: -0.5em !important;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+input {
+	background-color: $background-alt;
+	color: #fff;
+}
+
+input.card {
+	border: none;
+}
+
+*+* {
+	box-sizing: border-box;
+	margin: .5em 0
+}
+@media(min-width:35em){.col{display:table-cell}.\31{width:5%}.\33{width:22%}.\34{width:30%}.\35{width:40%}.\32{width:15%}.row{display:table;border-spacing:1em 0
+}
+}
+.row,
+.w-100 {
+	width:100%
+}
+.card:focus {
+	box-shadow: 0 0 0 1px $highlight;
+}
+hr {
+	outline:0;
+	border:1px solid $highlight-alt
+}
+.card,
+pre {
+	padding:1em;
+	border: 1px solid $highlight-alt;
+}
+.btn:hover{
+	background: $highlight-alt !important;
+	border: solid $highlight-alt !important; 
+}
+a:hover {
+	color: #fff;
+}
+.c {
+	max-width:60em;
+	padding:1em;
+	margin:auto;
+	font:1em/1.6 nunito
+}
+h6 {
+	font:300 1em nunito
+}
+h5 {
+	font:300 1.2em nunito
+}
+h3 {
+	font:300 2em nunito
+}
+h4 {
+	font:300 1.5em nunito
+}
+h2 {
+	font:300 2.2em nunito
+}
+h1 {
+	font:300 2.5em nunito
+}
+a {
+	color:$highlight-alt;
+	text-decoration:none
+}
+.btn.primary {
+	color:#fff;
+	background:$background-alt;
+	border:solid $background-alt;
+}
+pre {
+	overflow:auto
+}
+td,
+th {
+	padding:1em;
+	text-align:left;
+	border-bottom:1px solid $highlight-alt;
+}
+.btn {
+	padding:1em;
+	letter-spacing:.1em;
+	text-transform:uppercase;
+	background:$background-alt;
+	border:solid $background-alt;
+	font:.7em nunito;
+	color: #fff;
+}
+table {
+	border-collapse: collapse;
+}
+
+.ng-select {
+    .ng-select-container {
+		border: solid $background-alt;
+		background-color: $background-alt;
+		color: #fff;
+        border-radius: 0;
+    }
+
+    .ng-dropdown-panel {
+		border-radius: 0;		
+	}
+  }
+
+::ng-deep .mat-menu-panel {
+    background-color: $background-alt;
+}
+
+::ng-deep .mat-menu-item {
+    color: #fff;
+}
+
+::ng-deep .mat-menu-item:hover {
+	background-color: $background !important;
+    color: $highlight-alt;
+}
+
+.mat-chip.group-chip {
+    padding-right: 10px;
+    font-family: nunito;
+    background-color: $background-alt;
+    color: #fff;
+    border-radius: 0;
+}
+
+.mat-dialog-container {
+	background-color: $background;
+	color: $text-main;
+}
