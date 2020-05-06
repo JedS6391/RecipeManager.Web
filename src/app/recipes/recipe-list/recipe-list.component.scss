@@ -8,13 +8,13 @@
 }
 
 .recipe-group-separator {
-    background-color: #e0e0e0;
+    background-color: $background-alt;
     line-height: 0;
 }
 
 .recipe-group-separator > td {
-    border-bottom: solid #e0e0e0;
-    border-top: solid #e0e0e0;
+    border-bottom: solid $background-alt;
+    border-top: solid $background-alt;
 }
 
 .list-filter-option {
