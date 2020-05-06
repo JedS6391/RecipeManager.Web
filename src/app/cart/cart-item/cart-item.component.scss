@@ -1,6 +1,7 @@
 @import "../../../main.scss";
 
 .cart-item{
+    transition: 0.3s ease-in-out;
     border: 1px solid $highlight-alt;
     margin: 4px;
 }
@@ -23,7 +24,7 @@
 }
 
 .cart-item:hover {
-    border: 1px solid #fff;
+    background-color: $background;
 
     .cart-item-title {
         color: #fff;

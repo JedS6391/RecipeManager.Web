@@ -32,3 +32,11 @@
 .view-mode-option.selected {
     background-color: $background;
 }
+
+.recipe-list-row {
+    transition: 0.3s ease-in-out;
+}
+
+.recipe-list-row:hover {
+    background-color: $background-alt;
+}

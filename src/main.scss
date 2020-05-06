@@ -24,6 +24,7 @@ input {
 
 input.card {
 	border: none;
+	border-bottom: 2px solid $background-alt;
 }
 
 *+* {
@@ -38,7 +39,7 @@ input.card {
 	width:100%
 }
 .card:focus {
-	box-shadow: 0 0 0 1px $highlight;
+	border-bottom: 2px solid $highlight;
 }
 hr {
 	outline:0;
@@ -48,6 +49,7 @@ hr {
 pre {
 	padding:1em;
 	border: 1px solid $highlight-alt;
+	transition: 0.3s ease-in-out;
 }
 .btn:hover{
 	background: $highlight-alt !important;
@@ -88,6 +90,7 @@ a {
 	color:#fff;
 	background:$background-alt;
 	border:solid $background-alt;
+	transition: 0.3s ease-in-out;
 }
 pre {
 	overflow:auto
@@ -106,14 +109,38 @@ th {
 	border:solid $background-alt;
 	font:.7em nunito;
 	color: #fff;
+	transition: 0.3s ease-in-out;
 }
 table {
 	border-collapse: collapse;
 }
 
+.ng-select.ng-select-opened {	
+	.ng-select-container {
+		transition: 0.3s ease-in-out;
+		border-color: none;
+		border: none;
+		background-color: $background-alt;
+		color: #fff;
+        border-radius: 0;
+    }
+
+    .ng-dropdown-panel {
+		border-radius: 0;	
+		border: 1px solid $background-alt;
+		background-color: $background-alt;
+		height: auto;
+		
+		.ng-option {
+			background-color: $background-alt;
+			color: #fff
+		}
+	}
+}
+
 .ng-select {
     .ng-select-container {
-		border: solid $background-alt;
+		border: 1px solid $background-alt;
 		background-color: $background-alt;
 		color: #fff;
         border-radius: 0;
@@ -122,7 +149,7 @@ table {
     .ng-dropdown-panel {
 		border-radius: 0;		
 	}
-  }
+}
 
 ::ng-deep .mat-menu-panel {
     background-color: $background-alt;
@@ -148,4 +175,17 @@ table {
 .mat-dialog-container {
 	background-color: $background;
 	color: $text-main;
+}
+
+::ng-deep.mat-form-field-ripple {
+	background-color: $highlight !important;
+}
+   
+.mat-snack-bar-container {
+	background-color: black;
+	color: $text-main;
+}
+
+.mat-simple-snackbar-action {
+	color: $highlight-alt;
 }

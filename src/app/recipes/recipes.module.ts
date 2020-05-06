@@ -23,6 +23,7 @@ import { RecipeViewComponent } from './recipe-view/recipe-view.component';
 import { CartModule } from '../cart/cart.module';
 import { RecipeGroupsComponent } from './recipe-edit/recipe-groups/recipe-groups.component';
 import { RecipeListFiltersComponent } from './recipe-list/recipe-list-filters/recipe-list-filters.component';
+import { DeleteRecipeDialogComponent } from './recipe-list/delete-recipe-dialog/delete-recipe-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { RecipeListFiltersComponent } from './recipe-list/recipe-list-filters/re
     RecipeIngredientsComponent,
     RecipeViewComponent,
     RecipeGroupsComponent,
-    RecipeListFiltersComponent
+    RecipeListFiltersComponent,
+    DeleteRecipeDialogComponent
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ import { RecipeListFiltersComponent } from './recipe-list/recipe-list-filters/re
     MatAutocompleteModule,
     MatButtonModule,
     MatMenuModule
-  ]
+  ],
+  entryComponents: [DeleteRecipeDialogComponent]
 })
 export class RecipesModule { }
