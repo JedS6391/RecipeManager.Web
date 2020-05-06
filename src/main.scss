@@ -3,6 +3,7 @@ $background-alt: #161f27;
 $text-main: #dbdbdb;
 $highlight: #0096bfab;
 $highlight-alt: #fa0;
+$highlight-error: #ff3b3bab;
 
 body {
 	background-color: $background;
@@ -25,6 +26,10 @@ input {
 input.card {
 	border: none;
 	border-bottom: 2px solid $background-alt;
+}
+
+input.ng-invalid {
+    border-bottom: 2px solid $highlight-error !important;
 }
 
 *+* {
@@ -149,6 +154,10 @@ table {
     .ng-dropdown-panel {
 		border-radius: 0;		
 	}
+}
+
+ng-select.ng-invalid {
+    border-bottom: 2px solid $highlight-error !important;
 }
 
 ::ng-deep .mat-menu-panel {
