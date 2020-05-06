@@ -82,7 +82,7 @@ export class CartExportService {
         const element = document.createElement('a');
 
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportedCart));
-        element.setAttribute('download', 'Cart export');
+        element.setAttribute('download', 'Cart export.txt');
 
         element.style.display = 'none';
         document.body.appendChild(element);
@@ -90,10 +90,6 @@ export class CartExportService {
         element.click();
 
         document.body.removeChild(element);
-
-        // const blob = new Blob([exportedCart], { type: 'text' });
-        // const url = window.URL.createObjectURL(blob);
-        // window.open(url);
     }
 
     private ensureInitialised(): void {

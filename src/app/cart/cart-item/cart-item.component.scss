@@ -1,5 +1,8 @@
+@import "../../../main.scss";
+
 .cart-item{
-    border: 1px solid white;
+    transition: 0.3s ease-in-out;
+    border: 1px solid $highlight-alt;
     margin: 4px;
 }
 
@@ -21,10 +24,10 @@
 }
 
 .cart-item:hover {
-    border: 1px solid #fa0;
+    background-color: $background;
 
     .cart-item-title {
-        color: #fa0;
+        color: #fff;
     }
 }
 

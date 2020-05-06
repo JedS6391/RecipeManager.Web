@@ -1,6 +1,11 @@
-.mat-chip.group-chip {
-    margin-bottom: 10px;
-    font-family: nunito;
-    background-color: #eee;
-    border-radius: 0;
+@import "../../../../main.scss";
+
+.mat-chip.group-chip > i {
+    color: #fff;
+}
+
+.mat-chip-input {
+    padding: 1em;
+    background-color: $background;
+    caret-color: auto;
 }

@@ -12,21 +12,33 @@ const RECIPES_ROUTES: Routes = [
         path: '',
         component: RecipeListComponent,
         canActivate: [AuthenticationGuard],
+        data: {
+            state: `${RECIPES_PATH}-list`
+        }
     },
     {
         path: 'new',
         component: RecipeCreateComponent,
-        canActivate: [AuthenticationGuard]
+        canActivate: [AuthenticationGuard],
+        data: {
+            state: `${RECIPES_PATH}-new`
+        }
     },
     {
         path: 'edit/:id',
         component: RecipeEditComponent,
-        canActivate: [AuthenticationGuard]
+        canActivate: [AuthenticationGuard],
+        data: {
+            state: `${RECIPES_PATH}-edit`
+        }
     },
     {
         path: ':id',
         component: RecipeViewComponent,
-        canActivate: [AuthenticationGuard]
+        canActivate: [AuthenticationGuard],
+        data: {
+            state: `${RECIPES_PATH}-view`
+        }
     }
 ];
 

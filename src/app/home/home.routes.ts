@@ -6,7 +6,10 @@ export const HOME_PATH = 'home';
 const HOME_ROUTES: Routes = [
     {
         path: '',
-        component: HomeComponent
+        component: HomeComponent,
+        data: {
+            state: `${HOME_PATH}`
+        }
     }
 ];
 

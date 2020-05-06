@@ -12,6 +12,11 @@ import {
 } from '../../cart/add-recipe-to-cart/add-recipe-to-cart.component';
 import { CartService } from 'src/app/cart/service/cart.service';
 import { MessagingService } from 'src/app/shared/messaging.service';
+import {
+  DeleteRecipeDialogComponentData,
+  DeleteRecipeDialogComponent,
+  DeleteRecipeDialogComponentResult
+} from './delete-recipe-dialog/delete-recipe-dialog.component';
 
 type RecipeListViewMode = 'name' | 'recipeGroup';
 
@@ -130,15 +135,32 @@ export class RecipeListComponent implements OnInit {
     }
 
     public deleteRecipe(recipe: Recipe) {
-      this.recipesListFacade.deleteRecipe(recipe.id);
+      const deleteRecipeData: DeleteRecipeDialogComponentData = {
+        recipe
+      };
 
-      // Refresh once the delete is done.
-      this.isLoading$.pipe(
-        filter(isLoading => !isLoading),
-        take(1)
+      const dialogReference = this.dialog.open(DeleteRecipeDialogComponent, {
+        height: '250px',
+        width: '600px',
+        data: deleteRecipeData
+      });
+
+      dialogReference.afterClosed().pipe(
+        filter((result: DeleteRecipeDialogComponentResult) => !result.isCancelled)
       ).subscribe(() => {
-        this.recipesListFacade.fetchAllRecipes();
-        this.cartService.refreshCart();
+        this.recipesListFacade.deleteRecipe(recipe.id);
+
+        // Refresh once the delete is done.
+        this.isLoading$.pipe(
+          filter(isLoading => !isLoading),
+          take(1)
+        ).subscribe(() => {
+          this.recipesListFacade.fetchAllRecipes();
+          this.cartService.refreshCart();
+          this.messagingService.showMessage('Recipe successfully deleted!', {
+            duration: 2000
+          });
+        });
       });
     }
 
