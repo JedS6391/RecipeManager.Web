@@ -198,3 +198,13 @@ ng-select.ng-invalid {
 .mat-simple-snackbar-action {
 	color: $highlight-alt;
 }
+
+.footer {
+	position: fixed;
+	margin: 0;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	font-family: nunito;
+	text-align: center;
+}
