@@ -17,7 +17,8 @@ export const RECIPES_INITIAL_STATE: RecipeState = {
             ingredients: [],
             instructions: [],
             groups: []
-        }
+        },
+        importJob: null
     },
     edit: {
         isLoading: false,
@@ -49,8 +50,12 @@ const handlerMap: ActionHandlerMap<RecipeState> = {
     [actions.GetRecipeGroups.TYPE]: getRecipeGroupsHandler,
     [actions.GetRecipeGroupsSuccess.TYPE]: getRecipeGroupsSuccessHandler,
     [actions.GetRecipeGroupsFailure.TYPE]: getRecipeGroupsFailureHandler,
+    [actions.GetRecipeImportJobAction.TYPE]: getRecipeImportJobHandler,
+    [actions.GetRecipeImportJobSuccess.TYPE]: getRecipeImportJobSuccessHandler,
     [actions.CreateRecipeAction.TYPE]: createRecipeHandler,
     [actions.CreateRecipeSuccess.TYPE]: createRecipeSuccessHandler,
+    [actions.ImportRecipeAction.TYPE]: importRecipeHandler,
+    [actions.ImportRecipeSuccess.TYPE]: importRecipeSuccessHandler,
     [actions.UpdateRecipeAction.TYPE]: updateRecipeHandler,
     [actions.UpdateRecipeSuccess.TYPE]: updateRecipeSuccessHandler,
     [actions.DeleteRecipeAction.TYPE]: deleteRecipeHandler,
@@ -225,6 +230,34 @@ function getRecipeGroupsSuccessHandler(state: RecipeState, action: actions.GetRe
     };
 }
 
+function getRecipeImportJobHandler(state: RecipeState): RecipeState {
+    return {
+        list: state.list,
+        create: {
+            isLoading: true,
+            isSaving: false,
+            recipe: state.create.recipe,
+            importJob: state.create.importJob
+        },
+        edit: state.edit,
+        error: null
+    };
+}
+
+function getRecipeImportJobSuccessHandler(state: RecipeState, action: actions.GetRecipeImportJobSuccess): RecipeState {
+    return {
+        list: state.list,
+        create: {
+            isLoading: false,
+            isSaving: false,
+            recipe: state.create.recipe,
+            importJob: action.job
+        },
+        edit: state.edit,
+        error: null
+    };
+}
+
 function getRecipeGroupsFailureHandler(state: RecipeState, action: actions.GetRecipeGroupsFailure): RecipeState {
     return {
         list: state.list,
@@ -247,7 +280,8 @@ function createRecipeHandler(state: RecipeState): RecipeState {
         create: {
             isLoading: false,
             isSaving: true,
-            recipe: state.create.recipe
+            recipe: state.create.recipe,
+            importJob: state.create.importJob
         },
         edit: state.edit
     };
@@ -259,7 +293,34 @@ function createRecipeSuccessHandler(state: RecipeState, action: actions.CreateRe
         create: {
             isLoading: false,
             isSaving: false,
-            recipe: action.recipe
+            recipe: action.recipe,
+            importJob: state.create.importJob
+        },
+        edit: state.edit
+    };
+}
+
+function importRecipeHandler(state: RecipeState): RecipeState {
+    return {
+        list: state.list,
+        create: {
+            isLoading: true,
+            isSaving: false,
+            recipe: state.create.recipe,
+            importJob: null
+        },
+        edit: state.edit
+    };
+}
+
+function importRecipeSuccessHandler(state: RecipeState, action: actions.ImportRecipeSuccess): RecipeState {
+    return {
+        list: state.list,
+        create: {
+            isLoading: false,
+            isSaving: false,
+            recipe: state.create.recipe,
+            importJob: action.job
         },
         edit: state.edit
     };

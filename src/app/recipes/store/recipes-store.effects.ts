@@ -58,12 +58,34 @@ export class RecipesEffects {
     );
 
     @Effect()
+    public getRecipeImportJob$ = this.actions$.pipe(
+        ofType<actions.GetRecipeImportJobAction>(actions.GetRecipeImportJobAction.TYPE),
+        switchMap(action => {
+            return this.recipeApiService.getRecipeImportJob(action.jobId).pipe(
+                map(job => new actions.GetRecipeImportJobSuccess(job)),
+                catchError(error => of(new actions.GetRecipeImportJobFailure(error)))
+            );
+        })
+    );
+
+    @Effect()
     public createRecipe$ = this.actions$.pipe(
         ofType<actions.CreateRecipeAction>(actions.CreateRecipeAction.TYPE),
         switchMap(action => {
             return this.recipeApiService.createRecipe(action.recipe).pipe(
                 map(recipe => new actions.CreateRecipeSuccess(recipe)),
                 catchError(error => of(new actions.CreateRecipeFailure(error)))
+            );
+        })
+    );
+
+    @Effect()
+    public importRecipe$ = this.actions$.pipe(
+        ofType<actions.ImportRecipeAction>(actions.ImportRecipeAction.TYPE),
+        switchMap(action => {
+            return this.recipeApiService.importRecipe(action.recipe).pipe(
+                map(job => new actions.ImportRecipeSuccess(job)),
+                catchError(error => of(new actions.ImportRecipeFailure(error)))
             );
         })
     );

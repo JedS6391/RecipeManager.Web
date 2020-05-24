@@ -1,4 +1,5 @@
 import { Recipe, IngredientCategory, RecipeGroup } from '../api/models/read/recipe.interface';
+import { RecipeImportJob } from '../api/models/read/recipe-import-job.interface';
 
 export const RECIPES_STATE_STORE_KEY = 'recipes';
 
@@ -11,6 +12,7 @@ export interface RecipeState {
         isLoading: boolean;
         isSaving: boolean;
         recipe: Recipe;
+        importJob: RecipeImportJob;
     };
     edit: {
         isLoading: boolean;

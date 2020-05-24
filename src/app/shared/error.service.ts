@@ -14,6 +14,10 @@ export class ErrorService {
         this.errorStreams = new Map<string, Observable<Error>>();
     }
 
+    public recordError(error: Error): void {
+        Sentry.captureException(error);
+    }
+
     public registerErrorStream(errorType: string, errorStream: Observable<Error>): void {
         this.errorStreams.set(errorType, errorStream);
 

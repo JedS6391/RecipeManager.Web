@@ -10,6 +10,8 @@ import { CreateIngredient } from './models/write/create-ingredient.interface';
 import { UpdateRecipe } from './models/write/update-recipe.interface';
 import { BaseApiService } from '../../shared/base-api.service';
 import { UpdateRecipeGroups } from './models/write/update-recipe-groups.interface';
+import { ImportRecipe } from './models/write/import-recipe.interface';
+import { RecipeImportJob } from './models/read/recipe-import-job.interface';
 
 export const RECIPES_BASE_URL_TOKEN = new InjectionToken<string>('RecipeApiBaseUrl');
 
@@ -58,10 +60,28 @@ export class RecipeApiService extends BaseApiService {
         );
     }
 
+    public getRecipeImportJob(jobId: string): Observable<RecipeImportJob> {
+        const url = `${this.baseUrl}${RECIPE_URLS.get.recipeImportJob(jobId)}`;
+
+        return this.http.get<RecipeImportJob>(url).pipe(
+            publishLast(),
+            refCount()
+        );
+    }
+
     public createRecipe(recipe: CreateRecipe): Observable<Recipe> {
         const url = `${this.baseUrl}${RECIPE_URLS.create.recipe}`;
 
         return this.http.post<CreateRecipe>(url, recipe).pipe(
+            publishLast(),
+            refCount()
+        );
+    }
+
+    public importRecipe(recipe: ImportRecipe): Observable<RecipeImportJob> {
+        const url = `${this.baseUrl}${RECIPE_URLS.create.importRecipe}`;
+
+        return this.http.post<ImportRecipe>(url, recipe).pipe(
             publishLast(),
             refCount()
         );
