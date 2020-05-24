@@ -1,0 +1,34 @@
+<div class="c">
+    <app-profile
+      [title]="'Import recipe'"
+      [includeBackButton]="true"
+      [backButtonCommands]="['../../']">
+    </app-profile>
+  
+    <div class="card">  
+      <app-spinner *ngIf="(isLoading$ | async) || (jobRunning$ | async)"></app-spinner>
+      <form [formGroup]="form" (ngSubmit)=submitForm()>
+        <div *ngIf="!(jobRunning$ | async)" class="row">
+            <div class="11 col"></div>
+            <div class="1 col"><button class="btn primary save-button"><i class="fas fa-save"></i></button></div>
+        </div>
+        <div class="row">
+            <div class="12 col">
+                URL
+                <input 
+                  class="card w-100" 
+                  id="url" 
+                  formControlName="url"
+                  type="text" 
+                  placeholder="URL">
+            </div>
+        </div>
+        <div class="row">
+            <div class="12 col">
+                <small><b>The system will attempt to extract recipe content from the URL provided above.</b></small>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  

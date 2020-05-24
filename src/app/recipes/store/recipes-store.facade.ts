@@ -10,6 +10,8 @@ import { UpdateRecipe } from '../api/models/write/update-recipe.interface';
 import { CreateIngredient } from '../api/models/write/create-ingredient.interface';
 import { CreateRecipe } from '../api/models/write/create-recipe.interface';
 import { UpdateRecipeGroups } from '../api/models/write/update-recipe-groups.interface';
+import { ImportRecipe } from '../api/models/write/import-recipe.interface';
+import { RecipeImportJob } from '../api/models/read/recipe-import-job.interface';
 
 @Injectable()
 export class RecipesListFacade {
@@ -46,6 +48,14 @@ export class RecipesCreateFacade {
         this.store.dispatch(new actions.CreateRecipeAction(recipe));
     }
 
+    public importRecipe(recipe: ImportRecipe) {
+        this.store.dispatch(new actions.ImportRecipeAction(recipe));
+    }
+
+    public fetchRecipeImportJob(jobId: string) {
+        this.store.dispatch(new actions.GetRecipeImportJobAction(jobId));
+    }
+
     public getRecipe(): Observable<Recipe> {
         return this.store.pipe(
             select(selectors.recipeCreateState),
@@ -53,10 +63,24 @@ export class RecipesCreateFacade {
         );
     }
 
+    public getRecipeImportJob(): Observable<RecipeImportJob> {
+        return this.store.pipe(
+            select(selectors.recipeCreateState),
+            map(s => s.importJob)
+        );
+    }
+
     public isSaving(): Observable<boolean> {
         return this.store.pipe(
             select(selectors.recipeCreateState),
             map(s => s.isSaving)
+        );
+    }
+
+    public isLoading(): Observable<boolean> {
+        return this.store.pipe(
+            select(selectors.recipeCreateState),
+            map(s => s.isLoading)
         );
     }
 }

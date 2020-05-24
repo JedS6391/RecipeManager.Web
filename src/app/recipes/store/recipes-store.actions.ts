@@ -4,6 +4,8 @@ import { CreateIngredient } from '../api/models/write/create-ingredient.interfac
 import { UpdateRecipe } from '../api/models/write/update-recipe.interface';
 import { CreateRecipe } from '../api/models/write/create-recipe.interface';
 import { UpdateRecipeGroups } from '../api/models/write/update-recipe-groups.interface';
+import { ImportRecipe } from '../api/models/write/import-recipe.interface';
+import { RecipeImportJob } from '../api/models/read/recipe-import-job.interface';
 
 const RECIPES_STORE_ACTIONS_PREFIX = 'RECIPES';
 
@@ -176,6 +178,48 @@ export class DeleteRecipeSuccess implements Action {
 export class DeleteRecipeFailure implements Action {
     public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} DELETE RECIPE FAILURE`;
     public readonly type = DeleteRecipeFailure.TYPE;
+
+    constructor(public error: Error) {}
+}
+
+export class ImportRecipeAction implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} IMPORT RECIPE`;
+    public readonly type = ImportRecipeAction.TYPE;
+
+    constructor(public recipe: ImportRecipe) {}
+}
+
+export class ImportRecipeSuccess implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} IMPORT RECIPE SUCCESS`;
+    public readonly type = ImportRecipeSuccess.TYPE;
+
+    constructor(public job: RecipeImportJob) {}
+}
+
+export class ImportRecipeFailure implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} IMPORT RECIPE FAILURE`;
+    public readonly type = ImportRecipeFailure.TYPE;
+
+    constructor(public error: Error) {}
+}
+
+export class GetRecipeImportJobAction implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET RECIPE IMPORT JOB`;
+    public readonly type = GetRecipeImportJobAction.TYPE;
+
+    constructor(public jobId: string) {}
+}
+
+export class GetRecipeImportJobSuccess implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET RECIPE IMPORT JOB SUCCESS`;
+    public readonly type = GetRecipeImportJobSuccess.TYPE;
+
+    constructor(public job: RecipeImportJob) {}
+}
+
+export class GetRecipeImportJobFailure implements Action {
+    public static readonly TYPE = `${RECIPES_STORE_ACTIONS_PREFIX} GET RECIPE IMPORT JOB FAILURE`;
+    public readonly type = GetRecipeImportJobFailure.TYPE;
 
     constructor(public error: Error) {}
 }

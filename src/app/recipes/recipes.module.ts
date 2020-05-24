@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -24,6 +25,7 @@ import { CartModule } from '../cart/cart.module';
 import { RecipeGroupsComponent } from './recipe-edit/recipe-groups/recipe-groups.component';
 import { RecipeListFiltersComponent } from './recipe-list/recipe-list-filters/recipe-list-filters.component';
 import { DeleteRecipeDialogComponent } from './recipe-list/delete-recipe-dialog/delete-recipe-dialog.component';
+import { RecipeImportComponent } from './recipe-import/recipe-import.component';
 
 @NgModule({
   declarations: [
@@ -34,13 +36,15 @@ import { DeleteRecipeDialogComponent } from './recipe-list/delete-recipe-dialog/
     RecipeViewComponent,
     RecipeGroupsComponent,
     RecipeListFiltersComponent,
-    DeleteRecipeDialogComponent
+    DeleteRecipeDialogComponent,
+    RecipeImportComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     SpinnerModule,
     ProfileModule,
     CartModule,
