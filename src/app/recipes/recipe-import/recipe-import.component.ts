@@ -9,6 +9,8 @@ import { filter, take, withLatestFrom, map, switchMap, timeout, catchError, time
 import { RecipeImportJob, RecipeImportJobStatus } from '../api/models/read/recipe-import-job.interface';
 import { ErrorService } from 'src/app/shared/error.service';
 
+const urlRegex = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+
 @Component({
   selector: 'app-recipe-import',
   templateUrl: './recipe-import.component.html',
@@ -32,7 +34,7 @@ export class RecipeImportComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      url: ['', Validators.required]
+      url: ['', [Validators.required, Validators.pattern(urlRegex)]]
     });
 
     this.jobRunning$ = new BehaviorSubject(false);
