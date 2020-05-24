@@ -34,7 +34,7 @@ export class RecipeImportComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      url: ['', [Validators.required, Validators.pattern(urlRegex)]]
+      url: ['', Validators.compose([Validators.required, Validators.pattern(urlRegex)])]
     });
 
     this.jobRunning$ = new BehaviorSubject(false);
@@ -50,55 +50,64 @@ export class RecipeImportComponent implements OnInit {
       return;
     }
 
-    this.recipesCreateFacade.importRecipe({
-      recipeUrl: this.form.value.url
-    });
+    this.importRecipe(error => {
+      this.errorService.recordError(error);
 
-    this.recipesCreateFacade.isLoading().pipe(
-      filter(val => !val),
-      withLatestFrom(this.recipesCreateFacade.getRecipeImportJob()),
-      take(1)
-    ).subscribe(([, job]) => {
-      this.recipeImportJob$ = this.recipesCreateFacade.getRecipeImportJob();
+      this.jobRunning$.next(false);
 
-      this.jobRunning$.next(true);
-
-      this.form.disable();
-
-      this.messagingService.showMessage('Waiting for import to complete...', {
+      this.messagingService.showMessage('Import was aborted as it did not complete within 60 seconds.', {
         duration: 4000
       });
-
-      // Poll for the job status every 2 seconds.
-      const jobStatusPoller = timer(0, 2000).pipe(
-        map(() => this.recipesCreateFacade.fetchRecipeImportJob(job.id)),
-        switchMap(() => this.recipesCreateFacade.getRecipeImportJob()),
-        filter(j => j.status === RecipeImportJobStatus.Completed),
-        // As soon as the job completes we want to get the result.
-        take(1),
-        map(j => {
-          this.jobRunning$.next(false);
-
-          this.messagingService.showMessage('Recipe successfully imported!', {
-            duration: 4000
-          });
-
-          this.router.navigate([`recipes/edit/${j.importedRecipe.id}`]);
-        }),
-        timeout(60000)
-      );
-
-      jobStatusPoller.subscribe(
-        () => {},
-        error => {
-          this.errorService.recordError(error);
-
-          this.jobRunning$.next(false);
-
-          this.messagingService.showMessage('Import was aborted as it did not complete within 60 seconds.', {
-            duration: 4000
-          });
-        });
     });
+  }
+
+  private importRecipe(statusPollerErrorHandler: (error: Error) => void) {
+      this.recipesCreateFacade.importRecipe({
+        recipeUrl: this.form.value.url
+      });
+
+      this.recipesCreateFacade.isLoading().pipe(
+        filter(isLoading => !isLoading),
+        withLatestFrom(this.recipesCreateFacade.getRecipeImportJob()),
+        take(1)
+      ).subscribe(([, job]) => {
+        this.recipeImportJob$ = this.recipesCreateFacade.getRecipeImportJob();
+
+        this.jobRunning$.next(true);
+
+        this.form.disable();
+
+        this.messagingService.showMessage('Waiting for import to complete...', {
+          duration: 4000
+        });
+
+        const jobStatusPoller = this.getJobStatusPoller(job);
+
+        jobStatusPoller.subscribe(
+          () => {},
+          statusPollerErrorHandler
+        );
+      });
+  }
+
+  private getJobStatusPoller(job: RecipeImportJob) {
+    // Poll for the job status every 2 seconds.
+    return timer(0, 2000).pipe(
+      map(() => this.recipesCreateFacade.fetchRecipeImportJob(job.id)),
+      switchMap(() => this.recipesCreateFacade.getRecipeImportJob()),
+      filter(j => j.status === RecipeImportJobStatus.Completed),
+      // As soon as the job completes we want to get the result.
+      take(1),
+      map(j => {
+        this.jobRunning$.next(false);
+
+        this.messagingService.showMessage('Recipe successfully imported!', {
+          duration: 4000
+        });
+
+        this.router.navigate([`recipes/edit/${j.importedRecipe.id}`]);
+      }),
+      timeout(60000)
+    );
   }
 }
